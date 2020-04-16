@@ -24,6 +24,8 @@ CREATE TABLE PATIENT (
   id_patient INT NOT NULL AUTO_INCREMENT,
   nom VARCHAR(42) NOT NULL,
   prenom VARCHAR(42) NOT NULL,
+  email VARCHAR(50) NOT NULL,
+  password VARCHAR(200) NULL,
   dob Datetime NOT NULL,
   couple BOOLEAN DEFAULT false,
   categorie VARCHAR(42) NOT NULL,
