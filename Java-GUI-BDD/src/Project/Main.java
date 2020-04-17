@@ -9,6 +9,7 @@ public class Main {
     public static GUI.Window.Therapist therapistWindow;
 
     public static void main(String[] args) {
+        MariaDB.openConnection();
         createWindows();
     }
 
