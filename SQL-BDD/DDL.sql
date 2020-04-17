@@ -1,3 +1,4 @@
+drop database rdvs;
 CREATE DATABASE IF NOT EXISTS RDVS DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE RDVS;
 
@@ -26,7 +27,7 @@ CREATE TABLE PATIENT (
   prenom VARCHAR(42) NOT NULL,
   email VARCHAR(50) NOT NULL,
   password VARCHAR(200) NULL,
-  dob Datetime NOT NULL,
+  dob DATE NOT NULL,
   couple BOOLEAN DEFAULT false,
   categorie VARCHAR(42) NOT NULL,
   moyen VARCHAR(42),
@@ -45,7 +46,7 @@ CREATE TABLE TYPE_RDV (
 
 CREATE TABLE RDV (
   id_rdv INT NOT NULL AUTO_INCREMENT,
-  date_rdv DATETIME NOT NULL,
+  date_rdv DATE NOT NULL,
   paiement BOOLEAN NOT NULL DEFAULT false,
   id_type_rdv INT NOT NULL,
   PRIMARY KEY (id_rdv),
@@ -55,8 +56,8 @@ CREATE TABLE RDV (
 CREATE TABLE HISTORIQUE_JOB (
   id_patient INT NOT NULL,
   id_job INT NOT NULL,
-  date_debut Datetime NOT NULL DEFAULT NOW(),
-  date_fin Datetime,
+  date_debut DATE NOT NULL DEFAULT NOW(),
+  date_fin DATE,
   PRIMARY KEY (id_patient, id_job),
   FOREIGN KEY (id_job) REFERENCES JOB (id_job) ON DELETE CASCADE,
   FOREIGN KEY (id_patient) REFERENCES PATIENT (id_patient) ON DELETE CASCADE
