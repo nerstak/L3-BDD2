@@ -86,5 +86,4 @@ public class Edit extends GUI.TabBase implements ActionListener {
         */
 
     }
-
 }

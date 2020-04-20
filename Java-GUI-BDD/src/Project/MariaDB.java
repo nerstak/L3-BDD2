@@ -2,7 +2,7 @@ package Project;
 
 import java.sql.*;
 
-public class MariaDB {
+public class MariaDB<T> {
     //JDBC
     private static final String _driver = "org.mariadb.jdbc.Driver";
     private static final String _dbUrl = "jdbc:mariadb://127.0.0.1/rdvs";
@@ -12,6 +12,8 @@ public class MariaDB {
     private static final String _pass = "root";
 
     private static Connection _connection = null;
+
+    private PreparedStatement _stmt;
 
     /**
      * Open connection to database
@@ -44,20 +46,43 @@ public class MariaDB {
         }
     }
 
+    public MariaDB(String _request) {
+        try {
+            _stmt = _connection.prepareStatement(_request);
+        } catch (SQLException e) {
+            System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
+        }
+    }
+
+    public <T> void setValue(Integer index, T obj) {
+        try {
+            _stmt.setObject(index, obj);
+            _stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
+        }
+
+    }
+
+    public <T> void setValue(Integer index, T obj, SQLType type) {
+        try {
+            _stmt.setObject(index, obj, type);
+            _stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
+        }
+    }
+
     /**
      * Execute a query (as prepared)
      *
-     * @param sqlStatement SQL Query
      * @return Result or null if error
      */
-    public static ResultSet query(String sqlStatement) {
-        try (PreparedStatement stmt = _connection.prepareStatement(sqlStatement)) {
-            return stmt.executeQuery();
+    public ResultSet executeQuery() {
+        try {
+            return _stmt.executeQuery();
         } catch (SQLException e) {
             System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
-            return null;
-        } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }

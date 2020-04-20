@@ -1,12 +1,16 @@
 package Project;
 
 import GUI.Window.Login;
+import oo.User;
 
 public class Main {
     // Windows
     public static Login loginWindow;
     public static GUI.Window.Patient patientWindow;
     public static GUI.Window.Therapist therapistWindow;
+
+    // Variables
+    public static User user = null;
 
     public static void main(String[] args) {
         MariaDB.openConnection();
@@ -18,6 +22,7 @@ public class Main {
      */
     public static void loadLogin() {
         disposeWindows();
+        Main.user = null;
         createWindows();
     }
 

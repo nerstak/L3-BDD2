@@ -81,12 +81,16 @@ public class Login<T extends User> extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == loginButton) {
-            T u;
-            // TODO: Check values
-            Main.patientWindow.Load();
+            if (mailField.getText().equals("admin")) {
+                // Todo: check admin
+            } else {
+                Integer id = User.verifyUserCredentials(mailField.getText(), String.valueOf(passwordField.getPassword()));
 
-            setVisible(false);
-            dispose();
+                if (id != -1) {
+                    Main.user = new User(id);
+                    loadWindow(Main.user);
+                }
+            }
         } else if (e.getSource() == quitButton) {
             dispose();
         }
@@ -95,9 +99,15 @@ public class Login<T extends User> extends JFrame implements ActionListener {
     /**
      * Load the correct window that replaces the login window
      *
-     * @param u Object derived from User
+     * @param u User created
      */
-    private void loadWindow(T u) {
-        // Todo: Select correct window to load according to u
+    private void loadWindow(User u) {
+        if (u.getType().equals("Patient")) {
+            Main.patientWindow.Load();
+        } else {
+            Main.therapistWindow.Load();
+        }
+        setVisible(false);
+        dispose();
     }
 }
