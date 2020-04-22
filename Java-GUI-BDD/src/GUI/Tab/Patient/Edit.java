@@ -1,5 +1,6 @@
 package GUI.Tab.Patient;
 
+import Project.Main;
 import oo.User;
 
 import javax.swing.*;
@@ -11,34 +12,54 @@ import java.awt.event.ActionListener;
  */
 public class Edit extends GUI.TabBase implements ActionListener {
     // GUI
-    private JTextField _nameField, _idCardField, _emailField, _phoneNumberField, _addressField;
+    private JTextField _firstNameField, _lastNameField, _emailField, _dobField, _jobField;
     private JPasswordField _passwordField;
     private JButton _updateButton;
+    private JComboBox _relationComboBox;
 
     /**
      * Set the characteristics and position of elements in the window
      */
     @Override
     protected void SetElements() {
-        // Name
-        listComponents.add(new JLabel("Name"));
-        _nameField = new JTextField(10);
-        listComponents.add(_nameField);
+        // First Name
+        listComponents.add(new JLabel("First name"));
+        _firstNameField = new JTextField(10);
+        listComponents.add(_firstNameField);
 
-        // ID Card
-        listComponents.add(new JLabel("ID Card"));
-        _idCardField = new JTextField(10);
-        listComponents.add(_idCardField);
+        // Last Name
+        listComponents.add(new JLabel("Last name"));
+        _lastNameField = new JTextField(10);
+        listComponents.add(_lastNameField);
+
+        // DoB
+        listComponents.add(new JLabel("Date of birth (YYYY-MM-DD)"));
+        _dobField = new JTextField(10);
+        listComponents.add(_dobField);
 
         // Email
         listComponents.add(new JLabel("Email address"));
         _emailField = new JTextField(10);
         listComponents.add(_emailField);
 
+        // Relation
+        listComponents.add(new JLabel("Relation status"));
+        _relationComboBox = new JComboBox(new String[]{"Single", "In relation"});
+        _relationComboBox.setEditable(false);
+        listComponents.add(_relationComboBox);
+
+        // Job
+        listComponents.add(new JLabel("Job"));
+        _jobField = new JTextField(10);
+        listComponents.add(_jobField);
+
+        /*
+        //TODO: Rework address field
         // Address
         listComponents.add(new JLabel("Address"));
         _addressField = new JTextField(10);
         listComponents.add(_addressField);
+         */
 
         // Password
         listComponents.add(new JLabel("Password"));
@@ -58,6 +79,15 @@ public class Edit extends GUI.TabBase implements ActionListener {
         DisplayElements(2);
     }
 
+
+    public void Load() {
+        oo.Patient u = (oo.Patient) Main.user;
+        _firstNameField.setText(u.get_firstName());
+        _lastNameField.setText(u.get_lastName());
+        _emailField.setText(u.get_mail());
+        _dobField.setText(u.get_dob().toString());
+        _relationComboBox.setSelectedIndex(u.get_relation() ? 1 : 0);
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {

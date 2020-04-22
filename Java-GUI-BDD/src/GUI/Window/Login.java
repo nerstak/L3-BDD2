@@ -87,7 +87,7 @@ public class Login<T extends User> extends JFrame implements ActionListener {
                 Integer id = User.verifyUserCredentials(mailField.getText(), String.valueOf(passwordField.getPassword()));
 
                 if (id != -1) {
-                    Main.user = new User(id);
+                    Main.user = new oo.Patient(id);
                     loadWindow(Main.user);
                 }
             }
