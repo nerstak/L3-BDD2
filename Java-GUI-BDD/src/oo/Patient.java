@@ -1,9 +1,12 @@
 package oo;
 
 import Project.MariaDB;
+import Project.Utilities;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Patient extends User {
@@ -50,5 +53,44 @@ public class Patient extends User {
 
     public Boolean get_relation() {
         return _relation;
+    }
+
+    public String updateFields(String firstName, String lastName, String email, String dobString, Boolean couple, String password) {
+        MariaDB m;
+        Date dob;
+        if (firstName.isEmpty()) {
+            return "First Name";
+        }
+        if (lastName.isEmpty()) {
+            return "Last Name";
+        }
+        if (!Utilities.isValidMail(email)) {
+            return "Mail Address";
+        }
+        try {
+            dob = new SimpleDateFormat("yyyy-MM-dd").parse(dobString);
+        } catch (Exception e) {
+            return "date of birth";
+        }
+
+        if (password.isEmpty()) {
+            m = new MariaDB("UPDATE patient SET nom = ?, prenom = ?, email = ?, dob = ?, couple = ? WHERE id_patient = ?");
+        } else {
+            m = new MariaDB("UPDATE patient SET nom = ?, prenom = ?, email = ?, dob = ?, couple = ?, password = ? WHERE id_patient = ?");
+        }
+        Integer index = 1;
+        m.setValue(index++, lastName);
+        m.setValue(index++, firstName);
+        m.setValue(index++, email);
+        m.setValue(index++, new java.sql.Date(dob.getTime()), Types.DATE);
+        m.setValue(index++, couple, Types.BOOLEAN);
+        if (!password.isEmpty()) {
+            m.setValue(index++, password);
+        }
+        m.setValue(index++, get_id());
+
+        m.executeUpdate();
+
+        return "";
     }
 }

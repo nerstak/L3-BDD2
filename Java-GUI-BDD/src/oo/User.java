@@ -7,8 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class User {
-    protected String _type;
-    protected Integer _id;
+    private String _type;
+    private Integer _id;
 
     public User(Integer _id) {
         this._id = _id;

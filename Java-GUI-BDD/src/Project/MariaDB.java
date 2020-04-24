@@ -57,17 +57,15 @@ public class MariaDB<T> {
     public <T> void setValue(Integer index, T obj) {
         try {
             _stmt.setObject(index, obj);
-            _stmt.executeUpdate();
         } catch (SQLException e) {
             System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
         }
 
     }
 
-    public <T> void setValue(Integer index, T obj, SQLType type) {
+    public <T> void setValue(Integer index, T obj, int type) {
         try {
             _stmt.setObject(index, obj, type);
-            _stmt.executeUpdate();
         } catch (SQLException e) {
             System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
         }
@@ -84,6 +82,14 @@ public class MariaDB<T> {
         } catch (SQLException e) {
             System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
             return null;
+        }
+    }
+
+    public void executeUpdate() {
+        try {
+            _stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
         }
     }
 }

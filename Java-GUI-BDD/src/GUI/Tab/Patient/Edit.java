@@ -92,7 +92,19 @@ public class Edit extends GUI.TabBase implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == _updateButton) {
-
+            String result = ((oo.Patient) Main.user).updateFields(
+                    _firstNameField.getText(),
+                    _lastNameField.getText(),
+                    _emailField.getText(),
+                    _dobField.getText(),
+                    _relationComboBox.getSelectedIndex() == 1,
+                    String.valueOf(_passwordField.getPassword())
+            );
+            if (!result.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Incorrect " + result, "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "Information updated", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }
         }
     }
 
