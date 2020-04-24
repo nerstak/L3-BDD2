@@ -48,8 +48,9 @@ CREATE TABLE TYPE_RDV (
 
 CREATE TABLE RDV (
   id_rdv INT NOT NULL AUTO_INCREMENT,
-  date_rdv DATE NOT NULL,
-  paiement BOOLEAN NOT NULL DEFAULT false,
+  date_rdv DATETIME NOT NULL,
+  payee BOOLEAN NOT NULL DEFAULT false,
+  paiement VARCHAR(22) DEFAULT "X",
   id_type_rdv INT NOT NULL,
   PRIMARY KEY (id_rdv),
   FOREIGN KEY (id_type_rdv) REFERENCES TYPE_RDV (id_type_rdv) ON DELETE CASCADE
