@@ -27,6 +27,29 @@ public class User {
         return _id;
     }
 
+
+    public static Integer verifyUserMail(String mail)
+    {
+        Integer value = -1;
+
+        if (Utilities.isValidMail(mail)) {
+            MariaDB m = new MariaDB("SELECT id_patient, password FROM patient WHERE email=?");
+            m.setValue(1, mail);
+            try {
+                ResultSet x = m.executeQuery();
+                if (x.next()) {
+                    value = x.getInt(1);
+                }
+            } catch (SQLException e) {
+                System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
+            }
+
+        }
+
+        return value;
+    }
+
+
     /**
      * Verify credentials
      *
@@ -34,6 +57,7 @@ public class User {
      * @param password Password to check
      * @return Id of patient, -1 if false or not found
      */
+
     public static Integer verifyUserCredentials(String mail, String password) {
         // TODO: Hash passwords
         Integer value = -1;

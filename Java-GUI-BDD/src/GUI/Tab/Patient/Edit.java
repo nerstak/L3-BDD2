@@ -87,6 +87,7 @@ public class Edit extends GUI.TabBase implements ActionListener {
         _emailField.setText(u.get_mail());
         _dobField.setText(u.get_dob().toString());
         _relationComboBox.setSelectedIndex(u.get_relation() ? 1 : 0);
+        _jobField.setText(u.get_job());
     }
 
     @Override
@@ -98,7 +99,8 @@ public class Edit extends GUI.TabBase implements ActionListener {
                     _emailField.getText(),
                     _dobField.getText(),
                     _relationComboBox.getSelectedIndex() == 1,
-                    String.valueOf(_passwordField.getPassword())
+                    String.valueOf(_passwordField.getPassword()),
+                    _jobField.getText()
             );
             if (!result.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Incorrect " + result, "Error", JOptionPane.ERROR_MESSAGE);
