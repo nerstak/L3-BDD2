@@ -20,6 +20,7 @@ public class Patient extends User {
     public Patient(Integer _id) {
         super(_id);
 
+        // Selecting element from patient table
         MariaDB m = new MariaDB("SELECT nom, prenom, email, dob, couple FROM patient WHERE id_patient=?");
         m.setValue(1, _id);
         try {
@@ -36,8 +37,14 @@ public class Patient extends User {
         }
 
 
-        m = new MariaDB("SELECT nom FROM job INNER JOIN historique_job ON historique_job.id_job=job.id_job WHERE historique_job.id_patient=?");
+        // Selecting job
+        m = new MariaDB("SELECT nom FROM V_historique_job_complet" +
+                " WHERE id_patient = ? AND id_historique_job = (" +
+                "       SELECT MAX(id_historique_job)" +
+                "       FROM historique_job " +
+                "       WHERE id_patient = ?)");
         m.setValue(1, _id);
+        m.setValue(2, _id);
         try{
             ResultSet x = m.executeQuery();
             if(x.next())
@@ -74,6 +81,7 @@ public class Patient extends User {
     }
 
     public String updateFields(String firstName, String lastName, String email, String dobString, Boolean couple, String password, String job) {
+        // TODO: Implement job
         MariaDB m;
         Date dob;
         if (firstName.isEmpty()) {
@@ -85,6 +93,10 @@ public class Patient extends User {
         if (!Utilities.isValidMail(email)) {
             return "Mail Address";
         }
+        /*if(job.isEmpty())
+        {
+            return "Job";
+        }*/
         try {
             dob = new SimpleDateFormat("yyyy-MM-dd").parse(dobString);
         } catch (Exception e) {
@@ -94,10 +106,6 @@ public class Patient extends User {
             m = new MariaDB("UPDATE patient SET nom = ?, prenom = ?, email = ?, dob = ?, couple = ? WHERE id_patient = ?");
         } else {
             m = new MariaDB("UPDATE patient SET nom = ?, prenom = ?, email = ?, dob = ?, couple = ?, password = ? WHERE id_patient = ?");
-        }
-        if(job.isEmpty())
-        {
-            return "Job";
         }
 
 
@@ -110,7 +118,7 @@ public class Patient extends User {
         if (!password.isEmpty()) {
             m.setValue(index++, password);
         }
-        m.setValue(index++, job);
+        //m.setValue(index++, job);
         m.setValue(index++, get_id());
 
         m.executeUpdate();

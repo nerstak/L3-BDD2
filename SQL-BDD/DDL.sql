@@ -1,6 +1,7 @@
 CREATE DATABASE IF NOT EXISTS RDVS DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE RDVS;
 
+-- Creation of tables
 CREATE TABLE JOB (
   id_job INT NOT NULL AUTO_INCREMENT,
   nom VARCHAR(42) NOT NULL,
@@ -46,18 +47,20 @@ CREATE TABLE TYPE_RDV (
 CREATE TABLE RDV (
   id_rdv INT NOT NULL AUTO_INCREMENT,
   date_rdv DATETIME NOT NULL,
-  paiement BOOLEAN NOT NULL DEFAULT false,
+  payee BOOLEAN NOT NULL DEFAULT false,
+  paiement VARCHAR(22) DEFAULT "X",
   id_type_rdv INT NOT NULL,
   PRIMARY KEY (id_rdv),
   FOREIGN KEY (id_type_rdv) REFERENCES TYPE_RDV (id_type_rdv) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE HISTORIQUE_JOB (
+  id_historique_job INT NOT NULL AUTO_INCREMENT,
   id_patient INT NOT NULL,
   id_job INT NOT NULL,
   date_debut Datetime NOT NULL DEFAULT NOW(),
   date_fin Datetime,
-  PRIMARY KEY (id_patient, id_job),
+  PRIMARY KEY (id_historique_job),
   FOREIGN KEY (id_job) REFERENCES JOB (id_job) ON DELETE CASCADE,
   FOREIGN KEY (id_patient) REFERENCES PATIENT (id_patient) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -73,4 +76,12 @@ CREATE TABLE CONSULTATION (
   FOREIGN KEY (id_rdv) REFERENCES RDV (id_rdv) ON DELETE CASCADE,
   FOREIGN KEY (id_patient) REFERENCES PATIENT (id_patient) ON DELETE CASCADE,
   check(anxiete >= 0 and anxiete <= 10) -- Range of value
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8;
+
+
+-- Creation of views
+CREATE OR REPLACE VIEW V_historique_job_complet 
+AS SELECT id_historique_job, nom, id_patient, date_debut, date_fin 
+FROM job
+INNER JOIN historique_job 
+ON historique_job.id_job = job.id_job;

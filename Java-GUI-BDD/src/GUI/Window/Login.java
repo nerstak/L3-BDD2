@@ -98,13 +98,14 @@ public class Login<T extends User> extends JFrame implements ActionListener {
                         Main.user = new oo.Patient(id);
                         loadWindow(Main.user);
                     }
-                    else
+                    else {
                         JOptionPane.showMessageDialog(this, "Incorrect Password", "Error", JOptionPane.ERROR_MESSAGE);
-
+                    }
 
                 }
-                else
+                else {
                     JOptionPane.showMessageDialog(this, "Incorrect Mail", "Error", JOptionPane.ERROR_MESSAGE);
+                }
 
             }
         }

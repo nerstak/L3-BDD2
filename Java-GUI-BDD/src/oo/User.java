@@ -33,7 +33,7 @@ public class User {
         Integer value = -1;
 
         if (Utilities.isValidMail(mail)) {
-            MariaDB m = new MariaDB("SELECT id_patient, password FROM patient WHERE email=?");
+            MariaDB m = new MariaDB("SELECT id_patient FROM patient WHERE email=?");
             m.setValue(1, mail);
             try {
                 ResultSet x = m.executeQuery();
