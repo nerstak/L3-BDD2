@@ -3,6 +3,7 @@ CREATE DATABASE IF NOT EXISTS RDVS DEFAULT CHARACTER SET utf8 COLLATE utf8_gener
 USE RDVS;
 
 CREATE USER 'PSY' IDENTIFIED BY 'admin';
+-- Creation of tables
 
 CREATE TABLE JOB (
   id_job INT NOT NULL AUTO_INCREMENT,
@@ -57,11 +58,12 @@ CREATE TABLE RDV (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE HISTORIQUE_JOB (
+  id_historique_job INT NOT NULL AUTO_INCREMENT,
   id_patient INT NOT NULL,
   id_job INT NOT NULL,
   date_debut DATE NOT NULL DEFAULT NOW(),
   date_fin DATE,
-  PRIMARY KEY (id_patient, id_job),
+  PRIMARY KEY (id_historique_job),
   FOREIGN KEY (id_job) REFERENCES JOB (id_job) ON DELETE CASCADE,
   FOREIGN KEY (id_patient) REFERENCES PATIENT (id_patient) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -78,3 +80,40 @@ CREATE TABLE CONSULTATION (
   FOREIGN KEY (id_patient) REFERENCES PATIENT (id_patient) ON DELETE CASCADE,
   check(anxiete >= 0 and anxiete <= 10) -- Range of value
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+-- Creation of views
+CREATE OR REPLACE VIEW V_historique_job_complet 
+AS SELECT id_historique_job, nom, id_patient, date_debut, date_fin 
+FROM job
+INNER JOIN historique_job 
+ON historique_job.id_job = job.id_job;
+
+
+-- Stored procedure
+DELIMITER |
+CREATE OR REPLACE PROCEDURE new_job_patient(IN job_name VARCHAR(42), IN patient_id INT)
+BEGIN
+	DECLARE v_id_job INT;
+	DECLARE v_actual_name_job VARCHAR(42);
+	DECLARE v_actual_job INT;
+	
+	SELECT id_job INTO v_id_job FROM job WHERE nom = job_name; -- Checking if job name is already in table
+	IF (v_id_job IS NULL) THEN
+		SET @insertSQL := CONCAT("INSERT INTO job(nom) VALUES ('",job_name,"')"); -- Inserting new job name w/ prepared stmt
+		PREPARE stmt FROM @insertSQL;
+		EXECUTE stmt;
+		DEALLOCATE PREPARE stmt;
+		SELECT id_job INTO v_id_job FROM job WHERE nom = job_name;
+	END IF;
+
+
+	SELECT MAX(id_historique_job) INTO v_actual_job FROM historique_job WHERE id_patient = patient_id; -- Selecting most recent job
+	SELECT nom INTO v_actual_name_job FROM V_historique_job_complet WHERE id_historique_job = v_actual_job; -- Selecting its name
+	
+	IF(v_actual_name_job != job_name) THEN -- Checking if the has changed
+		UPDATE historique_job SET date_fin = DATE(NOW()) WHERE id_historique_job = v_actual_job;
+		INSERT INTO historique_job(id_patient, id_job) VALUES (patient_id, v_id_job);
+	END IF;
+END; |
+DELIMITER ;

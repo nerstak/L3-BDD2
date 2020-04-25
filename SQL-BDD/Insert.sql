@@ -1,15 +1,15 @@
 INSERT INTO job(nom) VALUES
-('Agriculteur'),
-('Artiste'),
-('Cadre'),
-('Chomeur'),
-('Docteur'),
-('Etudiant'),
-('Fonctionnaire'),
-('Ingénieur'),
-('Ouvrier'),
-('Professeur'),
-('Saisonnier');
+('agriculteur'),
+('artiste'),
+('cadre'),
+('chomeur'),
+('docteur'),
+('etudiant'),
+('fonctionnaire'),
+('ingénieur'),
+('ouvrier'),
+('professeur'),
+('saisonnier');
 
 INSERT INTO adresse(pays, region, ville, departement, code_postal, numero, rue) VALUES
 ('France', 'Ile-de-France', 'Paris', 'Paris', '75000', '30', 'Champs-Elysee'),
@@ -36,9 +36,9 @@ INSERT INTO rdv(id_type_rdv, date_rdv, paiement) VALUES
 
 INSERT INTO historique_job(id_patient, id_job, date_debut, date_fin) VALUES
 (1, 11, '2019-06-01', '2019-08-31'),
-(2, 10, '2000-09-05', NOW()),
+(2, 10, '2000-09-05', DATE(NOW())),
 (3, 11, '2019-06-01', '2019-08-31'),
-(4, 3, '1999-03-18', NOW());
+(4, 3, '1999-03-18', DATE(NOW()));
 
 INSERT INTO consultation(id_rdv, id_patient, posture, gestuel, mots_clés, anxiete) VALUES
 (1, 1, 'Ne se tient pas droit', NULL, 'pas droit', 5),
