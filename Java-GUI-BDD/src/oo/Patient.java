@@ -81,7 +81,6 @@ public class Patient extends User {
     }
 
     public String updateFields(String firstName, String lastName, String email, String dobString, Boolean couple, String password, String job) {
-        // TODO: Implement job
         MariaDB m;
         Date dob;
         if (firstName.isEmpty()) {
@@ -93,22 +92,23 @@ public class Patient extends User {
         if (!Utilities.isValidMail(email)) {
             return "Mail Address";
         }
-        /*if(job.isEmpty())
+        if(job.isEmpty())
         {
             return "Job";
-        }*/
+        }
         try {
             dob = new SimpleDateFormat("yyyy-MM-dd").parse(dobString);
         } catch (Exception e) {
             return "date of birth";
         }
+
+        // First we update direct information of the user
         if (password.isEmpty()) {
             m = new MariaDB("UPDATE patient SET nom = ?, prenom = ?, email = ?, dob = ?, couple = ? WHERE id_patient = ?");
         } else {
             m = new MariaDB("UPDATE patient SET nom = ?, prenom = ?, email = ?, dob = ?, couple = ?, password = ? WHERE id_patient = ?");
         }
-
-
+        
         Integer index = 1;
         m.setValue(index++, lastName);
         m.setValue(index++, firstName);
@@ -118,11 +118,14 @@ public class Patient extends User {
         if (!password.isEmpty()) {
             m.setValue(index++, password);
         }
-        //m.setValue(index++, job);
         m.setValue(index++, get_id());
-
         m.executeUpdate();
 
+        // Now updating name
+        m = new MariaDB("Call new_job_patient(?,?)");
+        m.setValue(1,job);
+        m.setValue(2,get_id());
+        m.executeUpdate();
         return "";
     }
 }
