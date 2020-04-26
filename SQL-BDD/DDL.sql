@@ -2,7 +2,7 @@ drop database rdvs;
 CREATE DATABASE IF NOT EXISTS RDVS DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE RDVS;
 
-CREATE USER 'PSY' IDENTIFIED BY 'admin';
+-- CREATE USER 'PSY' IDENTIFIED BY 'admin';
 -- Creation of tables
 
 CREATE TABLE JOB (
@@ -32,11 +32,12 @@ CREATE TABLE PATIENT (
   password VARCHAR(200) NULL,
   dob DATE NOT NULL,
   couple BOOLEAN DEFAULT false,
-  categorie VARCHAR(42) NOT NULL,
+  categorie VARCHAR(42) NOT NULL DEFAULT "adulte",
   moyen VARCHAR(42),
-  id_adresse INT, -- Adress can be null
+  id_adresse INT DEFAULT NULL, -- Adress can be null
   PRIMARY KEY (id_patient),
-  FOREIGN KEY (id_adresse) REFERENCES ADRESSE (id_adresse) ON DELETE SET NULL
+  FOREIGN KEY (id_adresse) REFERENCES ADRESSE (id_adresse) ON DELETE SET NULL,
+  CHECK(DATEDIFF(DATE(NOW()),dob) > 0)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE TYPE_RDV (
@@ -116,4 +117,68 @@ BEGIN
 		INSERT INTO historique_job(id_patient, id_job) VALUES (patient_id, v_id_job);
 	END IF;
 END; |
+DELIMITER ;
+
+DELIMITER |
+CREATE OR REPLACE PROCEDURE new_patient(IN fname VARCHAR(42), IN lname VARCHAR(42),
+													 IN mail VARCHAR(50), IN dob DATE, 
+													 IN relation BOOLEAN, IN job_name VARCHAR(42), 
+													 IN moyen VARCHAR(42), IN passw VARCHAR(200), 
+													 OUT p_valid BOOLEAN)
+BEGIN
+	DECLARE v_id INT;
+
+	SET @insertSQL := CONCAT('INSERT INTO patient(nom, prenom, dob, moyen, couple, email, password)  VALUES ("',
+				lname,'","',fname,'","',dob,'","',moyen,'","',relation,'","',mail,'","',passw,'")');-- Inserting patient in prepared stmt
+	PREPARE stmt FROM @insertSQL;
+	EXECUTE stmt;
+	DEALLOCATE PREPARE stmt;
+	
+	IF(ROW_COUNT() = 0) THEN -- If insert failed
+		SET p_valid = FALSE;
+	ELSE -- If success, we add the job
+		SELECT id_patient INTO v_id FROM patient WHERE email = mail;
+		CALL new_job_patient(job_name, v_id);
+	END IF;
+	SET p_valid = TRUE;
+END; |
+DELIMITER ;
+
+DELIMITER |
+CREATE OR REPLACE PROCEDURE check_dob(IN categorie VARCHAR(42), IN dob DATE, OUT cat_out VARCHAR(42))
+BEGIN
+    DECLARE v_diff INT;
+    SELECT DATEDIFF(NOW(), dob) INTO v_diff;
+    IF(v_diff > 18 * 365) THEN
+        SET cat_out = "adulte";
+    ELSEIF(v_diff > 12 * 365) THEN
+        SET cat_out = "adolescent";
+    ELSE
+        SET cat_out = "enfant";
+    END IF;
+END; |
+DELIMITER ;
+
+
+-- Triggers
+DELIMITER |
+CREATE OR REPLACE TRIGGER trigg_categorie_patient_insert
+    BEFORE INSERT ON patient
+    FOR EACH ROW
+BEGIN
+	DECLARE cat VARCHAR(42);
+	CALL check_dob(NEW.categorie,NEW.dob,cat);
+	SET NEW.categorie = cat;
+END; |
+
+CREATE OR REPLACE TRIGGER trigg_categorie_patient_update
+    BEFORE UPDATE ON patient
+    FOR EACH ROW
+BEGIN
+	DECLARE cat VARCHAR(42);
+	CALL check_dob(NEW.categorie,NEW.dob,cat);
+	SET NEW.categorie = cat;
+END; |
+
+
 DELIMITER ;

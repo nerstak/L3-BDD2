@@ -17,12 +17,12 @@ INSERT INTO adresse(pays, region, ville, departement, code_postal, numero, rue) 
 ('France', 'Bretagne', 'Vannes', 'Morbihan', NULL, NULL, NULL),
 ('Outre-Mer', 'Guyane', 'Cayenne', 'Guyane', NULL, NULL, NULL);
 
-INSERT INTO patient(nom, prenom, dob, categorie, moyen, email, password, id_adresse) VALUES
-('Pascal', 'Dupont', '1945-04-17', 'adulte', 'Pages-Jaunes', 'pascal.dupont@gmail.com', '1234', 1),
-('Roger', 'Dupond', '1985-04-17', 'adulte', 'Internet', 'rogerdu91@toutanota.com', '12345', 2),
-('Anna', 'Belle', '2004-02-29', 'adolescente', 'Patient', 'annabelle@free.fr', 'mdp123', 3),
-('Léa', 'Soutil', '1983-01-23', 'adulte', 'Bouche-a-Oreille', 'lea.soutil@sfr.fr', '#Ma1234', 4),
-('Huges', 'Dupuit', '2012-06-30', 'enfant', 'Docteur', 'huges.dupuit@hotmail.fr', '1234', NULL);
+INSERT INTO patient(nom, prenom, dob, moyen, email, password, id_adresse) VALUES
+('Pascal', 'Dupont', '1945-04-17', 'Pages-Jaunes', 'pascal.dupont@gmail.com', '1234', 1),
+('Roger', 'Dupond', '1985-04-17', 'Internet', 'rogerdu91@toutanota.com', '12345', 2),
+('Anna', 'Belle', '2004-02-29', 'Patient', 'annabelle@free.fr', 'mdp123', 3),
+('Léa', 'Soutil', '1983-01-23', 'Bouche-a-Oreille', 'lea.soutil@sfr.fr', '#Ma1234', 4),
+('Huges', 'Dupuit', '2012-06-30', 'Docteur', 'huges.dupuit@hotmail.fr', '1234', NULL);
 
 INSERT INTO type_rdv(type_rdv, prix) VALUES
 ('familial', 40),

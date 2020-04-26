@@ -18,6 +18,10 @@ public class Patient extends User {
     private Boolean _relation;
     private String _job;
 
+    /**
+     * Create Patient from database
+     * @param _id ID of patient
+     */
     public Patient(Integer _id) {
         super(_id);
 
@@ -55,6 +59,41 @@ public class Patient extends User {
         }catch (SQLException e){
             System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
         }
+    }
+
+    /**
+     * Create Patient from data and add it to database
+     * @param _firstName First name
+     * @param _lastName Last name
+     * @param _mail Mail address
+     * @param _dob Dob
+     * @param _relation Relation
+     * @param _job Job name
+     */
+    public static String createPatient(String _firstName, String _lastName, String _mail, String _dob, Boolean _relation, String _job, String password, String moyen) {
+        Date dob;
+        try {
+            dob = new SimpleDateFormat("yyyy-MM-dd").parse(_dob);
+        } catch (Exception e) {
+            return "date of birth";
+        }
+
+        Callable c = new Callable("CALL new_patient(?,?,?,?,?,?,?,?,?)");
+        Integer index = 1;
+        c.setValue(index++, _firstName);
+        c.setValue(index++, _lastName);
+        c.setValue(index++, _mail);
+        c.setValue(index++, new java.sql.Date(dob.getTime()), Types.DATE);
+        c.setValue(index++, _relation, Types.BOOLEAN);
+        c.setValue(index++, _job);
+        c.setValue(index++, moyen);
+        c.setValue(index++, password);
+        c.registerOutParameter(index, Types.BOOLEAN);
+
+        c.executeUpdate();
+
+        Boolean lol = c.getBoolean(index);
+        return lol.toString();
     }
 
     public String get_firstName() {

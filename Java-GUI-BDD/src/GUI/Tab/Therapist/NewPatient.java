@@ -1,6 +1,8 @@
 package GUI.Tab.Therapist;
 
 
+import oo.Patient;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,10 +10,15 @@ import java.awt.event.ActionListener;
 public class NewPatient extends GUI.Common.accountEdition implements ActionListener {
     // GUI
     private JButton _createButton;
+    private JTextField _meanField;
 
     @Override
     protected void SetElements() {
         super.SetElements();
+
+        listComponents.add(new JLabel("How did it hear of us?"));
+        _meanField = new JTextField(10);
+        listComponents.add(_meanField);
 
         // Button
         listComponents.add(new JLabel());
@@ -29,7 +36,14 @@ public class NewPatient extends GUI.Common.accountEdition implements ActionListe
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == _createButton) {
-
+            Patient.createPatient(_firstNameField.getText(),
+                                    _lastNameField.getText(),
+                                    _emailField.getText(),
+                                    _dobField.getText(),
+                                    _relationComboBox.getSelectedIndex() == 1,
+                                    _jobField.getText(),
+                                    String.valueOf(_passwordField.getPassword()),
+                                    _meanField.getText());
         }
     }
 }

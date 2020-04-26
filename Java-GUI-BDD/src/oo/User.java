@@ -10,6 +10,10 @@ public class User {
     private String _type;
     private Integer _id;
 
+    public User() {
+        _type = "Patient";
+    }
+
     public User(Integer _id) {
         this._id = _id;
         _type = "Patient";
