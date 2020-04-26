@@ -1,6 +1,7 @@
 package oo;
 
-import Project.MariaDB;
+import Project.Database.Callable;
+import Project.Database.Prepared;
 import Project.Utilities;
 
 import java.sql.ResultSet;
@@ -21,7 +22,7 @@ public class Patient extends User {
         super(_id);
 
         // Selecting element from patient table
-        MariaDB m = new MariaDB("SELECT nom, prenom, email, dob, couple FROM patient WHERE id_patient=?");
+        Prepared m = new Prepared("SELECT nom, prenom, email, dob, couple FROM patient WHERE id_patient=?");
         m.setValue(1, _id);
         try {
             ResultSet x = m.executeQuery();
@@ -38,7 +39,7 @@ public class Patient extends User {
 
 
         // Selecting job
-        m = new MariaDB("SELECT nom FROM V_historique_job_complet" +
+        m = new Prepared("SELECT nom FROM V_historique_job_complet" +
                 " WHERE id_patient = ? AND id_historique_job = (" +
                 "       SELECT MAX(id_historique_job)" +
                 "       FROM historique_job " +
@@ -81,7 +82,7 @@ public class Patient extends User {
     }
 
     public String updateFields(String firstName, String lastName, String email, String dobString, Boolean couple, String password, String job) {
-        MariaDB m;
+        Prepared m;
         Date dob;
         if (firstName.isEmpty()) {
             return "First Name";
@@ -104,9 +105,9 @@ public class Patient extends User {
 
         // First we update direct information of the user
         if (password.isEmpty()) {
-            m = new MariaDB("UPDATE patient SET nom = ?, prenom = ?, email = ?, dob = ?, couple = ? WHERE id_patient = ?");
+            m = new Prepared("UPDATE patient SET nom = ?, prenom = ?, email = ?, dob = ?, couple = ? WHERE id_patient = ?");
         } else {
-            m = new MariaDB("UPDATE patient SET nom = ?, prenom = ?, email = ?, dob = ?, couple = ?, password = ? WHERE id_patient = ?");
+            m = new Prepared("UPDATE patient SET nom = ?, prenom = ?, email = ?, dob = ?, couple = ?, password = ? WHERE id_patient = ?");
         }
         
         Integer index = 1;
@@ -122,10 +123,10 @@ public class Patient extends User {
         m.executeUpdate();
 
         // Now updating name
-        m = new MariaDB("Call new_job_patient(?,?)");
-        m.setValue(1,job);
-        m.setValue(2,get_id());
-        m.executeUpdate();
+        Callable c = new Callable("Call new_job_patient(?,?)");
+        c.setValue(1, job);
+        c.setValue(2, get_id());
+        c.executeUpdate();
         return "";
     }
 }

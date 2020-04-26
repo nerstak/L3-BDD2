@@ -1,6 +1,6 @@
 package oo;
 
-import Project.MariaDB;
+import Project.Database.Prepared;
 import Project.Utilities;
 
 import java.sql.ResultSet;
@@ -33,7 +33,7 @@ public class User {
         Integer value = -1;
 
         if (Utilities.isValidMail(mail)) {
-            MariaDB m = new MariaDB("SELECT id_patient FROM patient WHERE email=?");
+            Prepared m = new Prepared("SELECT id_patient FROM patient WHERE email=?");
             m.setValue(1, mail);
             try {
                 ResultSet x = m.executeQuery();
@@ -62,7 +62,7 @@ public class User {
         // TODO: Hash passwords
         Integer value = -1;
         if (Utilities.isValidMail(mail)) {
-            MariaDB m = new MariaDB("SELECT id_patient, password FROM patient WHERE email=?");
+            Prepared m = new Prepared("SELECT id_patient, password FROM patient WHERE email=?");
             m.setValue(1, mail);
             try {
                 ResultSet x = m.executeQuery();

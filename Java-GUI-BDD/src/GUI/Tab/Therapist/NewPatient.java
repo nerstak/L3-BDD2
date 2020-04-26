@@ -28,6 +28,8 @@ public class NewPatient extends GUI.Common.accountEdition implements ActionListe
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == _createButton) {
 
+        }
     }
 }

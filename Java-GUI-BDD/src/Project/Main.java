@@ -1,6 +1,7 @@
 package Project;
 
 import GUI.Window.Login;
+import Project.Database.MariaDB;
 import oo.User;
 
 public class Main {
@@ -13,8 +14,9 @@ public class Main {
     public static User user = null;
 
     public static void main(String[] args) {
-        MariaDB.openConnection();
-        createWindows();
+        if (MariaDB.openConnection()) {
+            createWindows();
+        }
     }
 
     /**

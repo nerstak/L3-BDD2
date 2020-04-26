@@ -4,6 +4,9 @@ import GUI.TabBase;
 
 import javax.swing.*;
 
+/**
+ * Class holding the GUI of the account edition
+ */
 public abstract class accountEdition extends TabBase {
     // GUI
     protected JTextField _firstNameField, _lastNameField, _emailField, _dobField, _jobField;
