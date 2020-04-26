@@ -10,61 +10,16 @@ import java.awt.event.ActionListener;
 /**
  * Class that holds Edit User information
  */
-public class Edit extends GUI.TabBase implements ActionListener {
+public class Edit extends GUI.Common.accountEdition implements ActionListener {
     // GUI
-    private JTextField _firstNameField, _lastNameField, _emailField, _dobField, _jobField;
-    private JPasswordField _passwordField;
     private JButton _updateButton;
-    private JComboBox _relationComboBox;
 
     /**
      * Set the characteristics and position of elements in the window
      */
     @Override
     protected void SetElements() {
-        // First Name
-        listComponents.add(new JLabel("First name"));
-        _firstNameField = new JTextField(10);
-        listComponents.add(_firstNameField);
-
-        // Last Name
-        listComponents.add(new JLabel("Last name"));
-        _lastNameField = new JTextField(10);
-        listComponents.add(_lastNameField);
-
-        // DoB
-        listComponents.add(new JLabel("Date of birth (YYYY-MM-DD)"));
-        _dobField = new JTextField(10);
-        listComponents.add(_dobField);
-
-        // Email
-        listComponents.add(new JLabel("Email address"));
-        _emailField = new JTextField(10);
-        listComponents.add(_emailField);
-
-        // Relation
-        listComponents.add(new JLabel("Relation status"));
-        _relationComboBox = new JComboBox(new String[]{"Single", "In relation"});
-        _relationComboBox.setEditable(false);
-        listComponents.add(_relationComboBox);
-
-        // Job
-        listComponents.add(new JLabel("Job"));
-        _jobField = new JTextField(10);
-        listComponents.add(_jobField);
-
-        /*
-        //TODO: Rework address field
-        // Address
-        listComponents.add(new JLabel("Address"));
-        _addressField = new JTextField(10);
-        listComponents.add(_addressField);
-         */
-
-        // Password
-        listComponents.add(new JLabel("Password"));
-        _passwordField = new JPasswordField(10);
-        listComponents.add(_passwordField);
+        super.SetElements(); // That's not extremely clean, but hey, it works
 
         // Button
         listComponents.add(new JLabel());
