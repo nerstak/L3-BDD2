@@ -17,23 +17,42 @@ public class ModelTable extends AbstractTableModel {
         return _columnPatient;
     }
 
-    public static String[][] getPatients(){
-        String[][] patients = new String[20][3];
-        patients[0][0] = "Prénom";
-        patients[0][1] = "Nom";
-        patients[0][2] = "Email";
+    private static int getSize() {
+        int size = 0;
 
         try
         {
-            int i = 1;
+            MariaDB m = new MariaDB("SELECT id_patient FROM patient");
+            ResultSet rs = m.executeQuery();
+            while(rs.next())
+                size++;
+
+        }
+        catch (SQLException e) {
+            System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
+        }
+        return size;
+    }
+
+    public static String[][] getPatients(){
+
+        // Init the table to do not too much line
+
+
+        // fill the table
+
+        String[][] patients = new String[getSize()][3];
+        try
+        {
+            int i = 0;
 
             MariaDB m = new MariaDB("SELECT nom, prenom, email from patient");
             ResultSet rs = m.executeQuery();
 
             while(rs.next())
             {
-                patients[i][0] = rs.getString(1);
-                patients[i][1] = rs.getString(2);
+                patients[i][0] = rs.getString(2);
+                patients[i][1] = rs.getString(1);
                 patients[i][2] = rs.getString(3);
                 i++;
             }
@@ -44,6 +63,36 @@ public class ModelTable extends AbstractTableModel {
 
         return patients;
     }
+
+
+    public static String[][] getPatientsByName(String name){
+
+        // fill the table
+        String[][] patients = new String[getSize()][3];
+        try
+        {
+            int i = 0;
+
+            MariaDB m = new MariaDB("SELECT nom, prenom, email from patient WHERE prenom = ?");
+            m.setValue(1, name);
+            ResultSet rs = m.executeQuery();
+
+            while(rs.next())
+            {
+                patients[i][0] = rs.getString(2);
+                patients[i][1] = rs.getString(1);
+                patients[i][2] = rs.getString(3);
+                i++;
+            }
+        }
+        catch (SQLException e) {
+            System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
+        }
+
+        return patients;
+    }
+
+
 
 
     @Override
