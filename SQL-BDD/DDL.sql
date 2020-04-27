@@ -37,6 +37,7 @@ CREATE TABLE PATIENT (
   id_adresse INT DEFAULT NULL, -- Adress can be null
   PRIMARY KEY (id_patient),
   FOREIGN KEY (id_adresse) REFERENCES ADRESSE (id_adresse) ON DELETE SET NULL,
+  UNIQUE(email),
   CHECK(DATEDIFF(DATE(NOW()),dob) > 0)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

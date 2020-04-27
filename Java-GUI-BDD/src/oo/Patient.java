@@ -72,14 +72,30 @@ public class Patient extends User {
      */
     public static String createPatient(String _firstName, String _lastName, String _mail, String _dob, Boolean _relation, String _job, String password, String moyen) {
         Date dob;
+        if(_firstName.isEmpty()) {
+            return "first name";
+        }
+        if(_lastName.isEmpty()) {
+            return "last name";
+        }
+        if(_mail.isEmpty()) {
+            return "mail";
+        }
         try {
             dob = new SimpleDateFormat("yyyy-MM-dd").parse(_dob);
         } catch (Exception e) {
             return "date of birth";
         }
+        if(_job.isEmpty()) {
+            return "job";
+        }
+        if(password.isEmpty()) {
+            return "password";
+        }
 
         Callable c = new Callable("CALL new_patient(?,?,?,?,?,?,?,?,?)");
         Integer index = 1;
+
         c.setValue(index++, _firstName);
         c.setValue(index++, _lastName);
         c.setValue(index++, _mail);
@@ -92,8 +108,12 @@ public class Patient extends User {
 
         c.executeUpdate();
 
-        Boolean lol = c.getBoolean(index);
-        return lol.toString();
+        Boolean result = c.getBoolean(index);
+        if(result) {
+            return "";
+        } else {
+            return "creation";
+        }
     }
 
     public String get_firstName() {

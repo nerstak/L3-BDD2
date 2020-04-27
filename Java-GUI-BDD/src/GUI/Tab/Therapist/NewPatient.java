@@ -36,7 +36,7 @@ public class NewPatient extends GUI.Common.accountEdition implements ActionListe
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == _createButton) {
-            Patient.createPatient(_firstNameField.getText(),
+            String result = Patient.createPatient(_firstNameField.getText(),
                                     _lastNameField.getText(),
                                     _emailField.getText(),
                                     _dobField.getText(),
@@ -44,6 +44,11 @@ public class NewPatient extends GUI.Common.accountEdition implements ActionListe
                                     _jobField.getText(),
                                     String.valueOf(_passwordField.getPassword()),
                                     _meanField.getText());
+            if(!result.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Incorrect " + result, "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "Patient created", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }
         }
     }
 }
