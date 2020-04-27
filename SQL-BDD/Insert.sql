@@ -39,3 +39,5 @@ INSERT INTO consultation(id_rdv, id_patient, posture, gestuel, mots_clés, anxie
 (2, 2, 'Ne se tient pas droit', 'regarde dans le vide, semble detruit interieurement', 'las', 5),
 (3, 4, NULL, 'Bouge les mains sans cesse, ne fait que parler', 'surexitee', 7);
 
+INSERT INTO therapist(name, password) VALUES
+('admin','admin');

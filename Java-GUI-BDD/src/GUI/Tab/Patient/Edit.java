@@ -66,25 +66,4 @@ public class Edit extends GUI.Common.accountEdition implements ActionListener {
             }
         }
     }
-
-    /**
-     * Update values of user
-     */
-    private <T extends User> void updateValues() {
-        /*T u = (T) Main.user;
-
-        u.setName(_nameField.getText());
-        u.setIdCard(_idCardField.getText());
-        u.setEmail(_emailField.getText().toLowerCase().toLowerCase());
-        u.setPhoneNumber(_phoneNumberField.getText());
-        u.setAddress(_addressField.getText());
-
-        // Is the password going to change
-        String password = String.valueOf(_passwordField.getPassword());
-        if(!password.isEmpty()) {
-            u.setPassword(password);
-        }
-        */
-
-    }
 }

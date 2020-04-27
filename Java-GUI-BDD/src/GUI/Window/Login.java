@@ -81,32 +81,30 @@ public class Login<T extends User> extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == loginButton) {
-            if (mailField.getText().equals("admin"))
-            {
-                Main.user = new oo.Therapist(-1);
-                loadWindow(Main.user);
-                // Todo: check admin
-            }
-            else
-            {
-                Integer id = User.verifyUserMail(mailField.getText());
-
-                if (id != -1)
+            Boolean error = false;
+            Integer id = User.verifyUserMail(mailField.getText()); // Getting id of patient corresponding to mail
+            if(id != -1) {
+                // Patient
+                if(User.verifyUserCredentials("Patient", mailField.getText(), String.valueOf(passwordField.getPassword())) != -1)
                 {
-                    if(User.verifyUserCredentials(mailField.getText(), String.valueOf(passwordField.getPassword())) != -1)
-                    {
-                        Main.user = new oo.Patient(id);
-                        loadWindow(Main.user);
-                    }
-                    else {
-                        JOptionPane.showMessageDialog(this, "Incorrect Password", "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-
+                    Main.user = new oo.Patient(id);
+                    loadWindow(Main.user);
                 }
                 else {
-                    JOptionPane.showMessageDialog(this, "Incorrect Mail", "Error", JOptionPane.ERROR_MESSAGE);
+                    error = true;
                 }
+            } else {
+                // Therapist
+                if(User.verifyUserCredentials("Therapist", mailField.getText(), String.valueOf(passwordField.getPassword())) != -1) {
+                    Main.user = new oo.Therapist(-1);
+                    loadWindow(Main.user);
+                } else {
+                    error = true;
+                }
+            }
 
+            if(error) {
+                JOptionPane.showMessageDialog(this, "Incorrect credentials", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
         else if (e.getSource() == quitButton) {

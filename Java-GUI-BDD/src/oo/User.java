@@ -59,29 +59,48 @@ public class User {
      *
      * @param mail     Mail to check
      * @param password Password to check
-     * @return Id of patient, -1 if false or not found
+     * @param type Type of account to check
+     * @return Id of patient or 1 if therapist, -1 if false or not found
      */
 
-    public static Integer verifyUserCredentials(String mail, String password) {
+    public static Integer verifyUserCredentials(String type, String mail, String password) {
         // TODO: Hash passwords
         Integer value = -1;
-        if (Utilities.isValidMail(mail)) {
-            Prepared m = new Prepared("SELECT id_patient, password FROM patient WHERE email=?");
+        if(type.equals("Patient")) {
+            // Verify patient credential
+            if (Utilities.isValidMail(mail)) {
+                Prepared m = new Prepared("SELECT id_patient, password FROM patient WHERE email=?");
+                m.setValue(1, mail);
+                try {
+                    ResultSet x = m.executeQuery();
+                    if (x.next()) {
+                        value = x.getInt(1);
+                        String pass = x.getString(2);
+                        if (!pass.equals(password)) {
+                            value = -1;
+                        }
+                    }
+                } catch (SQLException e) {
+                    System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
+                }
+            }
+        } else if (type.equals("Therapist")) {
+            // Verify therapist credential
+            Prepared m = new Prepared("SELECT password FROM therapist WHERE name = ?");
             m.setValue(1, mail);
             try {
                 ResultSet x = m.executeQuery();
                 if (x.next()) {
-                    value = x.getInt(1);
-                    String pass = x.getString(2);
-                    if (!pass.equals(password)) {
-                        value = -1;
+                    String pass = x.getString(1);
+                    if (pass.equals(password)) {
+                        value = 1;
                     }
                 }
             } catch (SQLException e) {
                 System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
             }
-
         }
+
         return value;
     }
 }
