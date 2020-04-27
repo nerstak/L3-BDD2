@@ -17,6 +17,7 @@ public class Patient extends User {
     private Date _dob;
     private Boolean _relation;
     private String _job;
+    private String _address;
 
     /**
      * Create Patient from database
@@ -26,7 +27,7 @@ public class Patient extends User {
         super(_id);
 
         // Selecting element from patient table
-        Prepared m = new Prepared("SELECT nom, prenom, email, dob, couple FROM patient WHERE id_patient=?");
+        Prepared m = new Prepared("SELECT nom, prenom, email, dob, couple, adresse FROM patient WHERE id_patient=?");
         m.setValue(1, _id);
         try {
             ResultSet x = m.executeQuery();
@@ -36,6 +37,7 @@ public class Patient extends User {
                 _mail = x.getString(3);
                 _dob = x.getDate(4);
                 _relation = x.getBoolean(5);
+                _address = x.getString(6);
             }
         } catch (SQLException e) {
             System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
@@ -70,7 +72,7 @@ public class Patient extends User {
      * @param _relation Relation
      * @param _job Job name
      */
-    public static String createPatient(String _firstName, String _lastName, String _mail, String _dob, Boolean _relation, String _job, String password, String moyen) {
+    public static String createPatient(String _firstName, String _lastName, String _mail, String _dob, Boolean _relation, String _job, String password, String moyen, String address) {
         Date dob;
         if(_firstName.isEmpty()) {
             return "first name";
@@ -140,7 +142,7 @@ public class Patient extends User {
         return _job;
     }
 
-    public String updateFields(String firstName, String lastName, String email, String dobString, Boolean couple, String password, String job) {
+    public String updateFields(String firstName, String lastName, String email, String dobString, Boolean couple, String password, String job, String adress) {
         Prepared m;
         Date dob;
         if (firstName.isEmpty()) {
@@ -164,9 +166,9 @@ public class Patient extends User {
 
         // First we update direct information of the user
         if (password.isEmpty()) {
-            m = new Prepared("UPDATE patient SET nom = ?, prenom = ?, email = ?, dob = ?, couple = ? WHERE id_patient = ?");
+            m = new Prepared("UPDATE patient SET nom = ?, prenom = ?, email = ?, dob = ?, couple = ?, adresse = ? WHERE id_patient = ?");
         } else {
-            m = new Prepared("UPDATE patient SET nom = ?, prenom = ?, email = ?, dob = ?, couple = ?, password = ? WHERE id_patient = ?");
+            m = new Prepared("UPDATE patient SET nom = ?, prenom = ?, email = ?, dob = ?, couple = ?, adresse = ?, password = ? WHERE id_patient = ?");
         }
         
         Integer index = 1;
@@ -175,6 +177,7 @@ public class Patient extends User {
         m.setValue(index++, email);
         m.setValue(index++, new java.sql.Date(dob.getTime()), Types.DATE);
         m.setValue(index++, couple, Types.BOOLEAN);
+        m.setValue(index++, adress);
         if (!password.isEmpty()) {
             m.setValue(index++, password);
         }
@@ -187,5 +190,9 @@ public class Patient extends User {
         c.setValue(2, get_id());
         c.executeUpdate();
         return "";
+    }
+
+    public String get_address() {
+        return _address;
     }
 }

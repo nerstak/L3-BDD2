@@ -43,7 +43,9 @@ public class NewPatient extends GUI.Common.accountEdition implements ActionListe
                                     _relationComboBox.getSelectedIndex() == 1,
                                     _jobField.getText(),
                                     String.valueOf(_passwordField.getPassword()),
-                                    _meanField.getText());
+                                    _meanField.getText(),
+                                    _addressField.getText()
+            );
             if(!result.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Incorrect " + result, "Error", JOptionPane.ERROR_MESSAGE);
             } else {

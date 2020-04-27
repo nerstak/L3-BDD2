@@ -10,6 +10,7 @@ import javax.swing.*;
 public abstract class accountEdition extends TabBase {
     // GUI
     protected JTextField _firstNameField, _lastNameField, _emailField, _dobField, _jobField;
+    protected JTextArea _addressField;
     protected JPasswordField _passwordField;
     protected JComboBox _relationComboBox;
 
@@ -45,13 +46,11 @@ public abstract class accountEdition extends TabBase {
         _jobField = new JTextField(10);
         listComponents.add(_jobField);
 
-        /*
-        //TODO: Rework address field
+
         // Address
         listComponents.add(new JLabel("Address"));
-        _addressField = new JTextField(10);
+        _addressField = new JTextArea(5,10);
         listComponents.add(_addressField);
-         */
 
         // Password
         listComponents.add(new JLabel("Password"));

@@ -43,6 +43,7 @@ public class Edit extends GUI.Common.accountEdition implements ActionListener {
         _dobField.setText(u.get_dob().toString());
         _relationComboBox.setSelectedIndex(u.get_relation() ? 1 : 0);
         _jobField.setText(u.get_job());
+        _addressField.setText(u.get_address());
     }
 
     @Override
@@ -55,7 +56,8 @@ public class Edit extends GUI.Common.accountEdition implements ActionListener {
                     _dobField.getText(),
                     _relationComboBox.getSelectedIndex() == 1,
                     String.valueOf(_passwordField.getPassword()),
-                    _jobField.getText()
+                    _jobField.getText(),
+                    _addressField.getText()
             );
             if (!result.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Incorrect " + result, "Error", JOptionPane.ERROR_MESSAGE);

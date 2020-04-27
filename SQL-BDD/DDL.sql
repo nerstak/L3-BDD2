@@ -12,31 +12,18 @@ CREATE TABLE JOB (
   UNIQUE(nom) -- No duplication
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE ADRESSE (
-  id_adresse INT NOT NULL AUTO_INCREMENT,
-  pays VARCHAR(42) NOT NULL,
-  region VARCHAR(42) NOT NULL,
-  ville VARCHAR(42),
-  departement VARCHAR(42) NOT NULL,
-  code_postal VARCHAR(42),
-  numero VARCHAR(42),
-  rue VARCHAR(42),
-  PRIMARY KEY (id_adresse)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 CREATE TABLE PATIENT (
   id_patient INT NOT NULL AUTO_INCREMENT,
   nom VARCHAR(42) NOT NULL,
   prenom VARCHAR(42) NOT NULL,
   email VARCHAR(50) NOT NULL,
-  password VARCHAR(200) NULL,
+  password VARCHAR(200) NOT NULL,
+  adresse VARCHAR(200),
   dob DATE NOT NULL,
   couple BOOLEAN DEFAULT false,
   categorie VARCHAR(42) NOT NULL DEFAULT "adulte",
   moyen VARCHAR(42),
-  id_adresse INT DEFAULT NULL, -- Adress can be null
   PRIMARY KEY (id_patient),
-  FOREIGN KEY (id_adresse) REFERENCES ADRESSE (id_adresse) ON DELETE SET NULL,
   UNIQUE(email),
   CHECK(DATEDIFF(DATE(NOW()),dob) > 0)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -170,6 +157,9 @@ BEGIN
 	DECLARE cat VARCHAR(42);
 	CALL check_dob(NEW.categorie,NEW.dob,cat);
 	SET NEW.categorie = cat;
+	IF(NEW.adresse = '') THEN
+        SET NEW.adresse = NULL;
+    end if;
 END; |
 
 CREATE OR REPLACE TRIGGER trigg_categorie_patient_update
@@ -179,6 +169,9 @@ BEGIN
 	DECLARE cat VARCHAR(42);
 	CALL check_dob(NEW.categorie,NEW.dob,cat);
 	SET NEW.categorie = cat;
+	IF(NEW.adresse = '') THEN
+        SET NEW.adresse = NULL;
+    end if;
 END; |
 
 
