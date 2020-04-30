@@ -80,7 +80,8 @@ public class Patient extends User {
         if(_lastName.isEmpty()) {
             return "last name";
         }
-        if(_mail.isEmpty()) {
+        _mail = _mail.replaceAll("\\s+", ""); // Remove white spaces
+        if (!Utilities.isValidMail(_mail)) {
             return "mail";
         }
         try {
@@ -151,6 +152,7 @@ public class Patient extends User {
         if (lastName.isEmpty()) {
             return "Last Name";
         }
+        email = email.replaceAll("\\s+", ""); // Remove white spaces
         if (!Utilities.isValidMail(email)) {
             return "Mail Address";
         }

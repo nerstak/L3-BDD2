@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+// TODO: Empty form after successful submission
 public class NewPatient extends GUI.Common.accountEdition implements ActionListener {
     // GUI
     private JButton _createButton;
@@ -37,14 +38,14 @@ public class NewPatient extends GUI.Common.accountEdition implements ActionListe
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == _createButton) {
             String result = Patient.createPatient(_firstNameField.getText(),
-                                    _lastNameField.getText(),
-                                    _emailField.getText(),
-                                    _dobField.getText(),
-                                    _relationComboBox.getSelectedIndex() == 1,
-                                    _jobField.getText(),
-                                    String.valueOf(_passwordField.getPassword()),
-                                    _meanField.getText(),
-                                    _addressField.getText()
+                    _lastNameField.getText(),
+                    _emailField.getText(),
+                    _dobField.getText(),
+                    _relationComboBox.getSelectedIndex() == 1,
+                    _jobField.getText(),
+                    String.valueOf(_passwordField.getPassword()),
+                    _meanField.getText(),
+                    _addressField.getText()
             );
             if(!result.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Incorrect " + result, "Error", JOptionPane.ERROR_MESSAGE);

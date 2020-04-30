@@ -34,6 +34,7 @@ public class User {
 
     public static Integer verifyUserMail(String mail)
     {
+        mail = mail.replaceAll("\\s+", "");
         Integer value = -1;
 
         if (Utilities.isValidMail(mail)) {

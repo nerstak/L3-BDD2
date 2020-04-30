@@ -1,13 +1,17 @@
 package GUI.Tab.Therapist;
 
 
+import Project.ItemComboBox;
+import Project.Pair;
 import Project.Utilities;
+import oo.Appointment;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
+import java.util.Vector;
 
 public class NewAppointment extends GUI.TabBase implements ActionListener {
     // GUI
@@ -16,11 +20,11 @@ public class NewAppointment extends GUI.TabBase implements ActionListener {
     private JButton _submitButton;
     private DefaultComboBoxModel _modelCombobox;
     private JPanel _datePanel;
+    private Vector<ItemComboBox> _typesAppointment;
 
     // Local variables
     private final LocalDateTime _actualDate = LocalDateTime.now();
     private String[] _typeString;
-    private LocalDateTime _daySelected;
 
     public NewAppointment() {
         SetElements();
@@ -29,7 +33,23 @@ public class NewAppointment extends GUI.TabBase implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        if (e.getSource() == _submitButton) {
+            String date = _yearComboBox.getSelectedItem() + "-" +
+                    _monthComboBox.getSelectedItem() + "-" +
+                    _dayComboBox.getSelectedItem() + " " +
+                    _timeComboBox.getSelectedItem();
+            int idAppointment = ((ItemComboBox) _typeComboBox.getSelectedItem()).getId();
+            Pair<Boolean, String> result = Appointment.createAppointment(_patient1Text.getText(),
+                    _patient2Text.getText(),
+                    _patient3Text.getText(),
+                    idAppointment,
+                    date);
+            if (!result.getA()) {
+                JOptionPane.showMessageDialog(this, "Error " + result.getB(), "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "Appointment added", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
     }
 
     @Override
@@ -46,17 +66,16 @@ public class NewAppointment extends GUI.TabBase implements ActionListener {
         _patient3Text = new JTextField(10);
         listComponents.add(_patient3Text);
 
-        /* // TODO : Base list of appointment on database
         // Selecting type of appointment;
         listComponents.add(new JLabel("Type of appointment"));
-        _modelCombobox = new DefaultComboBoxModel(HERE); // Get list of type of appointment
+        _typesAppointment = Appointment.getTypesAndPrices();
+        _modelCombobox = new DefaultComboBoxModel(_typesAppointment); // Get list of type of appointment
         _typeComboBox = new JComboBox(_modelCombobox);
         listComponents.add(_typeComboBox);
-         */
+
 
         // Selecting day and time
         setDatePanel();
-
         listComponents.add(new JLabel("Time"));
         _timeComboBox = new JComboBox(generateHours(8, 20));
         listComponents.add(_timeComboBox);
@@ -69,6 +88,9 @@ public class NewAppointment extends GUI.TabBase implements ActionListener {
         listComponents.add(_submitButton);
     }
 
+    /**
+     * Set panel for the date
+     */
     private void setDatePanel() {
         _datePanel = new JPanel() {{
             setBackground(Color.LIGHT_GRAY);
@@ -85,7 +107,6 @@ public class NewAppointment extends GUI.TabBase implements ActionListener {
 
     /**
      * Generate list of half hours from a rounded one
-     *
      * @param b Int corresponding to starting round hour
      * @param e Ending round hour
      * @return List of string
@@ -101,4 +122,6 @@ public class NewAppointment extends GUI.TabBase implements ActionListener {
         }
         return y;
     }
+
+
 }
