@@ -39,6 +39,25 @@ public class Appointment {
         Pair<Boolean, String> result = checkValuesAppointment(patient1, patient2, patient3, type_id, datetime);
         if (result.getA()) {
             int idAppointment = insertAppointment(type_id, datetime);
+
+            if(idAppointment > 0) {
+                int idPatient1 = User.verifyUserMail(patient1);
+                int idPatient2 = User.verifyUserMail(patient2);
+                int idPatient3 = User.verifyUserMail(patient3);
+                if(idPatient1 != -1) {
+                    Consultation.createConsultation(idPatient1,idAppointment);
+                }
+                if(idPatient2 != -1) {
+                    Consultation.createConsultation(idPatient2,idAppointment);
+                }
+                if(idPatient3 != -1) {
+                    Consultation.createConsultation(idPatient3,idAppointment);
+                }
+            } else {
+                result.setA(false);
+                result.setB("interference with other appointments");
+            }
+
         }
 
         return result;
@@ -120,7 +139,11 @@ public class Appointment {
         ResultSet r = p.executeQuery();
         try {
             if (r.next()) {
-                return r.getInt(1);
+                if(r.getInt(1) == 0) {
+                    return -1;
+                } else {
+                    return r.getInt(1);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();

@@ -1,4 +1,4 @@
-drop database rdvs;
+drop database IF EXISTS rdvs;
 CREATE DATABASE IF NOT EXISTS RDVS DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE RDVS;
 
@@ -27,7 +27,7 @@ CREATE TABLE PATIENT (
   adresse VARCHAR(200),
   dob DATE NOT NULL,
   couple BOOLEAN DEFAULT false,
-  categorie VARCHAR(42) NOT NULL DEFAULT "adulte",
+  categorie VARCHAR(42) NOT NULL DEFAULT 'adulte',
   moyen VARCHAR(42),
   PRIMARY KEY (id_patient),
   UNIQUE(email),
@@ -45,8 +45,9 @@ CREATE TABLE TYPE_RDV (
 CREATE TABLE RDV (
   id_rdv INT NOT NULL AUTO_INCREMENT,
   date_rdv DATETIME NOT NULL,
+  status VARCHAR(42) NOT NULL DEFAULT 'Planned',
   payee BOOLEAN NOT NULL DEFAULT false,
-  paiement VARCHAR(22) DEFAULT "X",
+  paiement VARCHAR(22) DEFAULT 'X',
   id_type_rdv INT NOT NULL,
   PRIMARY KEY (id_rdv),
   FOREIGN KEY (id_type_rdv) REFERENCES TYPE_RDV (id_type_rdv) ON DELETE CASCADE
@@ -95,7 +96,7 @@ BEGIN
 	
 	SELECT id_job INTO v_id_job FROM job WHERE nom = job_name; -- Checking if job name is already in table
 	IF (v_id_job IS NULL) THEN
-		SET @insertSQL := CONCAT("INSERT INTO job(nom) VALUES ('",job_name,"')"); -- Inserting new job name w/ prepared stmt
+		SET @insertSQL := CONCAT('INSERT INTO job(nom) VALUES ("',job_name,'")'); -- Inserting new job name w/ prepared stmt
 		PREPARE stmt FROM @insertSQL;
 		EXECUTE stmt;
 		DEALLOCATE PREPARE stmt;
@@ -114,6 +115,9 @@ END; |
 DELIMITER ;
 
 DELIMITER |
+/**
+  Create a new patient into tables
+ */
 CREATE OR REPLACE PROCEDURE new_patient(IN fname VARCHAR(42), IN lname VARCHAR(42),
 													 IN mail VARCHAR(50), IN dob DATE, 
 													 IN relation BOOLEAN, IN job_name VARCHAR(42), 
@@ -139,20 +143,38 @@ END; |
 DELIMITER ;
 
 DELIMITER |
+/**
+  Assign category from DoB
+ */
 CREATE OR REPLACE PROCEDURE check_dob(IN categorie VARCHAR(42), IN dob DATE, OUT cat_out VARCHAR(42))
 BEGIN
     DECLARE v_diff INT;
     SELECT DATEDIFF(NOW(), dob) INTO v_diff;
     IF(v_diff > 18 * 365) THEN
-        SET cat_out = "adulte";
+        SET cat_out = 'adulte';
     ELSEIF(v_diff > 12 * 365) THEN
-        SET cat_out = "adolescent";
+        SET cat_out = 'adolescent';
+    ELSEIF(v_diff <= 12 *365 AND v_diff > 0) THEN
+        SET cat_out = 'enfant';
     ELSE
-        SET cat_out = "enfant";
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible to insert value: incorrect date of birth';
     END IF;
 END; |
 DELIMITER ;
 
+
+-- Functions
+DELIMITER |
+/**
+  Count number of appointment on one day from a datetime
+ */
+CREATE OR REPLACE FUNCTION numberAppointmentPlanned(dayTime datetime) RETURNS INT
+BEGIN
+    DECLARE v_day DATE;
+    SELECT DATE(dayTime) INTO v_day;
+    RETURN (SELECT COUNT(id_rdv) FROM rdv WHERE DATE(date_rdv) = v_day AND status = 'Planned');
+end; |
+DELIMITER ;
 
 -- Triggers
 DELIMITER |
@@ -179,6 +201,24 @@ BEGIN
         SET NEW.adresse = NULL;
     end if;
 END; |
+
+CREATE OR REPLACE TRIGGER trigg_rdv_check_insert
+    BEFORE INSERT ON rdv
+    FOR EACH ROW
+BEGIN
+    IF((SELECT date_rdv FROM rdv WHERE date_rdv = NEW.date_rdv) != 0 OR numberAppointmentPlanned(NEW.date_rdv) >= 20) THEN
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible to insert value';
+    end if;
+END; |
+
+CREATE OR REPLACE TRIGGER trigg_consultation_insert
+    BEFORE INSERT ON consultation
+    FOR EACH ROW
+BEGIN
+    IF((SELECT COUNT(id_rdv) FROM consultation WHERE id_rdv = NEW.id_rdv) >= 3) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible to insert value';
+    end if;
+end; |
 
 
 DELIMITER ;

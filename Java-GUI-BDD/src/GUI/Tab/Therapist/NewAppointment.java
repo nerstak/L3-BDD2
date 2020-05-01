@@ -34,18 +34,23 @@ public class NewAppointment extends GUI.TabBase implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == _submitButton) {
+            // Formatting data
             String date = _yearComboBox.getSelectedItem() + "-" +
                     _monthComboBox.getSelectedItem() + "-" +
                     _dayComboBox.getSelectedItem() + " " +
                     _timeComboBox.getSelectedItem();
             int idAppointment = ((ItemComboBox) _typeComboBox.getSelectedItem()).getId();
+
+            // Creating appointment
             Pair<Boolean, String> result = Appointment.createAppointment(_patient1Text.getText(),
                     _patient2Text.getText(),
                     _patient3Text.getText(),
                     idAppointment,
                     date);
+
+            // Window
             if (!result.getA()) {
-                JOptionPane.showMessageDialog(this, "Error " + result.getB(), "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Error: " + result.getB(), "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(this, "Appointment added", "Success", JOptionPane.INFORMATION_MESSAGE);
             }
