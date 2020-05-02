@@ -14,7 +14,7 @@ public class Main {
     public static User user = null;
 
     public static void main(String[] args) {
-        if (MariaDB.openConnection()) {
+        if (MariaDB.openConnection("login","loginPassword")) {
             createWindows();
         }
     }
@@ -24,6 +24,8 @@ public class Main {
      */
     public static void loadLogin() {
         disposeWindows();
+        MariaDB.closeConnection();
+        MariaDB.openConnection("login","loginPassword");
         Main.user = null;
         createWindows();
     }

@@ -73,9 +73,7 @@ public class NewAppointment extends GUI.TabBase implements ActionListener {
 
         // Selecting type of appointment;
         listComponents.add(new JLabel("Type of appointment"));
-        _typesAppointment = Appointment.getTypesAndPrices();
-        _modelCombobox = new DefaultComboBoxModel(_typesAppointment); // Get list of type of appointment
-        _typeComboBox = new JComboBox(_modelCombobox);
+        _typeComboBox = new JComboBox();
         listComponents.add(_typeComboBox);
 
 
@@ -128,5 +126,10 @@ public class NewAppointment extends GUI.TabBase implements ActionListener {
         return y;
     }
 
-
+    @Override
+    public void Load() {
+        _typesAppointment = Appointment.getTypesAndPrices();
+        _modelCombobox = new DefaultComboBoxModel(_typesAppointment); // Get list of type of appointment
+        _typeComboBox.setModel(_modelCombobox);
+    }
 }

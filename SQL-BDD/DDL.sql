@@ -2,6 +2,10 @@ drop database IF EXISTS rdvs;
 CREATE DATABASE IF NOT EXISTS RDVS DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE RDVS;
 
+DROP USER IF EXISTS login;
+DROP USER IF EXISTS therapist;
+DROP USER IF EXISTS patient;
+
 -- CREATE USER 'PSY' IDENTIFIED BY 'admin';
 -- Creation of tables
 
@@ -79,16 +83,18 @@ CREATE TABLE CONSULTATION (
 
 
 -- Creation of views
-CREATE OR REPLACE VIEW V_historique_job_complet 
-AS SELECT id_historique_job, nom, id_patient, date_debut, date_fin 
-FROM job
+CREATE OR REPLACE DEFINER = CURRENT_USER
+VIEW V_historique_job_complet
+    AS SELECT id_historique_job, nom, id_patient, date_debut, date_fin
+    FROM job
 INNER JOIN historique_job 
 ON historique_job.id_job = job.id_job;
 
 
 -- Stored procedure
 DELIMITER |
-CREATE OR REPLACE PROCEDURE new_job_patient(IN job_name VARCHAR(42), IN patient_id INT)
+CREATE OR REPLACE DEFINER = CURRENT_USER
+PROCEDURE new_job_patient(IN job_name VARCHAR(42), IN patient_id INT)
 BEGIN
 	DECLARE v_id_job INT;
 	DECLARE v_actual_name_job VARCHAR(42);
@@ -118,7 +124,8 @@ DELIMITER |
 /**
   Create a new patient into tables
  */
-CREATE OR REPLACE PROCEDURE new_patient(IN fname VARCHAR(42), IN lname VARCHAR(42),
+CREATE OR REPLACE DEFINER = CURRENT_USER
+PROCEDURE new_patient(IN fname VARCHAR(42), IN lname VARCHAR(42),
 													 IN mail VARCHAR(50), IN dob DATE, 
 													 IN relation BOOLEAN, IN job_name VARCHAR(42), 
 													 IN moyen VARCHAR(42), IN passw VARCHAR(200), 
@@ -146,7 +153,8 @@ DELIMITER |
 /**
   Assign category from DoB
  */
-CREATE OR REPLACE PROCEDURE check_dob(IN categorie VARCHAR(42), IN dob DATE, OUT cat_out VARCHAR(42))
+CREATE OR REPLACE DEFINER = CURRENT_USER
+PROCEDURE check_dob(IN categorie VARCHAR(42), IN dob DATE, OUT cat_out VARCHAR(42))
 BEGIN
     DECLARE v_diff INT;
     SELECT DATEDIFF(NOW(), dob) INTO v_diff;
@@ -168,7 +176,8 @@ DELIMITER |
 /**
   Count number of appointment on one day from a datetime
  */
-CREATE OR REPLACE FUNCTION numberAppointmentPlanned(dayTime datetime) RETURNS INT
+CREATE OR REPLACE DEFINER = CURRENT_USER
+FUNCTION numberAppointmentPlanned(dayTime datetime) RETURNS INT
 BEGIN
     DECLARE v_day DATE;
     SELECT DATE(dayTime) INTO v_day;
@@ -222,3 +231,38 @@ end; |
 
 
 DELIMITER ;
+
+-- Users
+-- Add GRANT EXECUTE *ONLY* to users that may need it
+CREATE USER 'login' IDENTIFIED BY 'loginPassword';
+GRANT SELECT ON TABLE rdvs.patient TO login;
+GRANT SELECT ON TABLE rdvs.therapist TO login;
+GRANT SELECT ON TABLE rdvs.historique_job TO login; -- Following lines are needed to create a Patient in Java
+GRANT SELECT ON TABLE rdvs.job TO login;
+GRANT SELECT ON rdvs.v_historique_job_complet TO login;
+
+CREATE USER 'therapist' IDENTIFIED BY 'therapistPassword';
+GRANT EXECUTE ON PROCEDURE check_dob TO therapist;
+GRANT EXECUTE ON PROCEDURE new_job_patient TO therapist;
+GRANT EXECUTE ON PROCEDURE new_patient TO therapist;
+GRANT EXECUTE ON FUNCTION numberAppointmentPlanned TO therapist;
+GRANT SELECT, INSERT, UPDATE ON rdvs.consultation TO therapist;
+GRANT SELECT, INSERT ON rdvs.historique_job TO therapist;
+GRANT SELECT, INSERT ON rdvs.job TO therapist;
+GRANT SELECT, INSERT, UPDATE ON rdvs.patient TO therapist;
+GRANT SELECT, INSERT, UPDATE ON rdvs.rdv TO therapist;
+GRANT SELECT ON rdvs.type_rdv TO therapist;
+GRANT SELECT ON rdvs.v_historique_job_complet TO therapist;
+
+CREATE USER 'patient' IDENTIFIED BY 'patientPassword';
+GRANT SELECT ON rdvs.consultation TO patient;
+GRANT EXECUTE ON PROCEDURE check_dob TO patient;
+GRANT SELECT, INSERT ON rdvs.historique_job TO patient;
+GRANT SELECT, INSERT ON rdvs.job TO patient;
+GRANT SELECT, UPDATE ON rdvs.patient TO patient;
+GRANT SELECT, UPDATE ON rdvs.rdv TO patient; -- CAN UPDATE IF WE INCLUDE MODIFICATION OF APPOINTMENTS
+GRANT SELECT ON rdvs.type_rdv TO patient;
+GRANT SELECT ON rdvs.v_historique_job_complet TO patient;
+
+
+

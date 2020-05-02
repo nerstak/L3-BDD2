@@ -1,5 +1,6 @@
 package GUI.Window;
 
+import Project.Database.MariaDB;
 import Project.Main;
 import oo.User;
 
@@ -118,9 +119,12 @@ public class Login<T extends User> extends JFrame implements ActionListener {
      * @param u User created
      */
     private void loadWindow(User u) {
+        MariaDB.closeConnection();
         if (u.getType().equals("Patient")) {
+            MariaDB.openConnection("patient","patientPassword");
             Main.patientWindow.Load();
         } else {
+            MariaDB.openConnection("therapist","therapistPassword");
             Main.therapistWindow.Load();
         }
         setVisible(false);

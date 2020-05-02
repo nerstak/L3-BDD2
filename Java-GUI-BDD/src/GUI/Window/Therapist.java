@@ -28,7 +28,7 @@ public class Therapist extends GUI.PanelBase {
 
     public void Load() {
         // Load each tab
-
+        _newAppointmentPanel.Load();
         setFrame("Therapist Panel");
     }
 }

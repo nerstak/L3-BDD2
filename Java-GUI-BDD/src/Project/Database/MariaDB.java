@@ -12,9 +12,6 @@ public class MariaDB {
     private static final String _driver = "org.mariadb.jdbc.Driver";
     private static final String _dbUrl = "jdbc:mariadb://127.0.0.1/rdvs";
 
-    // Credentials
-    private static final String _user = "root";
-    private static final String _pass = "root";
 
     static Connection _connection = null;
 
@@ -23,11 +20,11 @@ public class MariaDB {
      *
      * @return Boolean attesting the sequence of events
      */
-    public static boolean openConnection() {
+    public static boolean openConnection(String user, String password) {
         try {
             Class.forName(_driver);
             System.out.println("Connecting to database...");
-            _connection = DriverManager.getConnection(_dbUrl, _user, _pass);
+            _connection = DriverManager.getConnection(_dbUrl, user, password);
             System.out.println("Connected successfully!");
             return true;
         } catch (Exception e) {
