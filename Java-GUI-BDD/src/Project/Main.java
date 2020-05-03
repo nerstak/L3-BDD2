@@ -44,4 +44,18 @@ public class Main {
         patientWindow.dispose();
         therapistWindow.dispose();
     }
+
+    public static void disposeAllWindows()
+    {
+        loginWindow.dispose();
+        patientWindow.dispose();
+        therapistWindow.dispose();
+    }
+
+    /**
+     * Create therapist window in case we disposed the previous one
+     */
+    public static void createWindowsTherapist() {
+        therapistWindow = new GUI.Window.Therapist();
+    }
 }

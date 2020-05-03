@@ -3,7 +3,8 @@ package GUI.Tab.Therapist;
 import GUI.TabBase;
 import Project.Main;
 import Project.MariaDB;
-import oo.Therapist;
+import oo.Patient;
+import GUI.Window.Therapist;
 import oo.User;
 
 import javax.swing.*;
@@ -11,17 +12,13 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
-public class SeePatient<T extends Therapist> extends TabBase implements ActionListener, ListSelectionListener, DocumentListener
+public class SeePatient<T extends Therapist> extends TabBase implements ListSelectionListener, DocumentListener
 {
     private JTextField _search;
-    private JButton _add;
+    //private JButton _add;
 
     private String[][] _patients;
     private JTable _table;
@@ -42,11 +39,6 @@ public class SeePatient<T extends Therapist> extends TabBase implements ActionLi
         _search = new JTextField();
         _search.getDocument().addDocumentListener(this);
         listComponents.add(_search);
-
-        // add a patient
-        _add = new JButton("Add a Patient");
-        _add.addActionListener(this);
-        listComponents.add(_add);
 
         // Table of all patients
         _patients = ModelTable.getPatients();
@@ -72,6 +64,12 @@ public class SeePatient<T extends Therapist> extends TabBase implements ActionLi
     }
 
 
+    public void RefreshTable()
+    {
+        _patients = ModelTable.getPatients();
+        LoadTable();
+    }
+
 
     private void search() {
         /*
@@ -84,12 +82,6 @@ public class SeePatient<T extends Therapist> extends TabBase implements ActionLi
 
         LoadTable();
 */
-    }
-
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
     }
 
     @Override
@@ -109,6 +101,8 @@ public class SeePatient<T extends Therapist> extends TabBase implements ActionLi
                 if(rs.next())
                 {
                     IDPatient = rs.getInt(1);           // get the ID of the patient
+                    Main.user = new oo.Patient(IDPatient);
+                    loadWindow();
                 }
                 System.out.println(IDPatient);
 
@@ -134,4 +128,12 @@ public class SeePatient<T extends Therapist> extends TabBase implements ActionLi
         search();
     }
 
+    /**
+     * Load the correct window of the patient that replaces the actual one (it's horrible to look at, we'll have to do it in a better way I think)
+     */
+    private void loadWindow() {
+        Main.disposeAllWindows();
+        setVisible(false);
+        Main.patientWindow.Load();
+    }
 }
