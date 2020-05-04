@@ -90,6 +90,16 @@ VIEW V_historique_job_complet
 INNER JOIN historique_job 
 ON historique_job.id_job = job.id_job;
 
+CREATE OR REPLACE DEFINER = CURRENT_USER
+VIEW V_extended_appointment
+    AS
+    SELECT rdv.id_rdv, date_rdv, status, rdv.payee, rdv.paiement, type_rdv.type_rdv, type_rdv.prix, id_patient
+    FROM consultation
+        INNER JOIN rdv
+        ON rdv.id_rdv = consultation.id_rdv
+            INNER JOIN type_rdv
+            ON rdv.id_type_rdv = type_rdv.id_type_rdv;
+
 
 -- Stored procedure
 DELIMITER |
@@ -253,6 +263,7 @@ GRANT SELECT, INSERT, UPDATE ON rdvs.patient TO therapist;
 GRANT SELECT, INSERT, UPDATE ON rdvs.rdv TO therapist;
 GRANT SELECT ON rdvs.type_rdv TO therapist;
 GRANT SELECT ON rdvs.v_historique_job_complet TO therapist;
+GRANT SELECT ON rdvs.v_extended_appointment TO therapist;
 
 CREATE USER 'patient' IDENTIFIED BY 'patientPassword';
 GRANT SELECT ON rdvs.consultation TO patient;
@@ -263,6 +274,7 @@ GRANT SELECT, UPDATE ON rdvs.patient TO patient;
 GRANT SELECT, UPDATE ON rdvs.rdv TO patient; -- CAN UPDATE IF WE INCLUDE MODIFICATION OF APPOINTMENTS
 GRANT SELECT ON rdvs.type_rdv TO patient;
 GRANT SELECT ON rdvs.v_historique_job_complet TO patient;
+GRANT SELECT ON rdvs.v_extended_appointment TO patient;
 
 
 
