@@ -3,6 +3,7 @@ package oo;
 import Project.Database.Prepared;
 import Project.ItemComboBox;
 import Project.Pair;
+import Project.Utilities;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -32,12 +33,41 @@ public class Appointment {
         this.status = status;
     }
 
+    public int getIdAppointment() {
+        return idAppointment;
+    }
+
+    public String getPayment() {
+        return payment;
+    }
+
+    public boolean isPayed() {
+        return payed;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public Date getAppointmentTime() {
+        return appointmentTime;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
     public static ArrayList<Appointment> recoverAppointments(int idUser) {
         ArrayList<Appointment> list = new ArrayList<>();
 
         Prepared p = new Prepared("SELECT id_rdv, date_rdv, status, type_rdv, prix, paiement, payee " +
                                     "FROM v_extended_appointment " +
-                                    "WHERE id_patient = ?");
+                                    "WHERE id_patient = ? " +
+                                    "ORDER BY date_rdv DESC");
         p.setValue(1,idUser);
 
         try {
@@ -72,7 +102,7 @@ public class Appointment {
             ResultSet r = p.executeQuery();
             while (r.next()) {
                 String tmp = r.getString(1) + ": " + r.getInt(2) + "€";
-                tmp = tmp.substring(0, 1).toUpperCase() + tmp.substring(1);
+                tmp = Utilities.capitalizeFirstLetter(tmp);
                 formattedTypes.add(new ItemComboBox(r.getInt(3), tmp));
             }
         } catch (SQLException e) {
