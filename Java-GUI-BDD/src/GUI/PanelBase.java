@@ -6,7 +6,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
 
 /**
  * Abstract class that is the base of every window with tabs
@@ -20,7 +19,7 @@ public abstract class PanelBase extends JPanel implements ActionListener {
     public PanelBase() {
         super(new GridLayout(1, 1));
         tabbedPane = new JTabbedPane();
-        //tabbedPane.setPreferredSize(new Dimension(600,800));
+        // tabbedPane.setPreferredSize(new Dimension(600,800));
         add(tabbedPane);
     }
 

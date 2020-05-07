@@ -21,7 +21,7 @@ public abstract class TabBase extends JPanel {
     /**
      * Virtual method to load data into different panels
      */
-    public void Load() { // May need to be changed later
+    public void Load() {
     }
 
     /**

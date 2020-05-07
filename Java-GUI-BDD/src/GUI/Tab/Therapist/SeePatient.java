@@ -1,6 +1,7 @@
 package GUI.Tab.Therapist;
 
 import GUI.TabBase;
+import Project.Database.Prepared;
 import Project.Main;
 import Project.MariaDB;
 import oo.Patient;
@@ -86,18 +87,18 @@ public class SeePatient<T extends Therapist> extends TabBase implements ListSele
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        if(!_table.getSelectionModel().isSelectionEmpty())
+        /** if(!_table.getSelectionModel().isSelectionEmpty())
         {
             _selectedRow = _table.getSelectionModel().getMinSelectionIndex();
             Integer IDPatient = 0;
 
             try {
-                MariaDB m = new MariaDB("SELECT id_patient FROM patient WHERE prenom = ? AND nom = ? AND email = ?;");
-                m.setValue(1, (String) _table.getValueAt(_selectedRow, 0));     // set the firstname
-                m.setValue(2, (String) _table.getValueAt(_selectedRow, 1));     // set the lastname
-                m.setValue(3, (String) _table.getValueAt(_selectedRow, 2));     // set the mail
+                Prepared p = new Prepared("SELECT id_patient FROM patient WHERE prenom = ? AND nom = ? AND email = ?;");
+                p.setValue(1, (String) _table.getValueAt(_selectedRow, 0));     // set the firstname
+                p.setValue(2, (String) _table.getValueAt(_selectedRow, 1));     // set the lastname
+                p.setValue(3, (String) _table.getValueAt(_selectedRow, 2));     // set the mail
 
-                ResultSet rs = m.executeQuery();
+                ResultSet rs = p.executeQuery();
                 if(rs.next())
                 {
                     IDPatient = rs.getInt(1);           // get the ID of the patient
@@ -110,7 +111,7 @@ public class SeePatient<T extends Therapist> extends TabBase implements ListSele
             catch (SQLException f) {
                 System.err.format("\nSQL State: %s\n%s", f.getSQLState(), f.getMessage());
             }
-        }
+        } **/
     }
 
     @Override
@@ -132,8 +133,7 @@ public class SeePatient<T extends Therapist> extends TabBase implements ListSele
      * Load the correct window of the patient that replaces the actual one (it's horrible to look at, we'll have to do it in a better way I think)
      */
     private void loadWindow() {
-        Main.disposeAllWindows();
-        setVisible(false);
-        Main.patientWindow.Load();
+        Main.therapistWindow.dispose();
+        Main.therapistWindow.Load();
     }
 }

@@ -19,7 +19,7 @@ public class Patient extends GUI.PanelBase {
         addLogOutButtonToTab();
     }
 
-    public void Load() {
+    public void Load() { // TODO : Put loading of data in tab in another public subfunction
         // Load each tab
         _editPanel.Load();
         setFrame("Patient Panel");

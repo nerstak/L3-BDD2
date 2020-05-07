@@ -1,8 +1,8 @@
 package Project;
 
 import GUI.Window.Login;
+import Project.Database.MariaDB;
 import oo.User;
-
 
 public class Main {
     // Windows
@@ -14,8 +14,9 @@ public class Main {
     public static User user = null;
 
     public static void main(String[] args) {
-        MariaDB.openConnection();
-        createWindows();
+        if (MariaDB.openConnection("login","loginPassword")) {
+            createWindows();
+        }
     }
 
     /**
@@ -23,6 +24,8 @@ public class Main {
      */
     public static void loadLogin() {
         disposeWindows();
+        MariaDB.closeConnection();
+        MariaDB.openConnection("login","loginPassword");
         Main.user = null;
         createWindows();
     }
@@ -42,19 +45,5 @@ public class Main {
     private static void disposeWindows() {
         patientWindow.dispose();
         therapistWindow.dispose();
-    }
-
-    public static void disposeAllWindows()
-    {
-        loginWindow.dispose();
-        patientWindow.dispose();
-        therapistWindow.dispose();
-    }
-
-    /**
-     * Create therapist window in case we disposed the previous one
-     */
-    public static void createWindowsTherapist() {
-        therapistWindow = new GUI.Window.Therapist();
     }
 }
