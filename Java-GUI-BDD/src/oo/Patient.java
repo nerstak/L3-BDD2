@@ -96,7 +96,7 @@ public class Patient extends User {
             return "password";
         }
 
-        Callable c = new Callable("CALL new_patient(?,?,?,?,?,?,?,?,?)");
+        Callable c = new Callable("CALL new_patient(?,?,?,?,?,?,?,?,?,?)");
         Integer index = 1;
 
         c.setValue(index++, _firstName);
@@ -107,6 +107,7 @@ public class Patient extends User {
         c.setValue(index++, _job);
         c.setValue(index++, moyen);
         c.setValue(index++, password);
+        c.setValue(index++, address);
         c.registerOutParameter(index, Types.BOOLEAN);
 
         c.executeUpdate();

@@ -17,22 +17,22 @@ public abstract class accountEdition extends TabBase {
     protected void SetElements() {
         // First Name
         listComponents.add(new JLabel("First name"));
-        _firstNameField = new JTextField(10);
+        _firstNameField = new JTextField(15);
         listComponents.add(_firstNameField);
 
         // Last Name
         listComponents.add(new JLabel("Last name"));
-        _lastNameField = new JTextField(10);
+        _lastNameField = new JTextField(15);
         listComponents.add(_lastNameField);
 
         // DoB
         listComponents.add(new JLabel("Date of birth (YYYY-MM-DD)"));
-        _dobField = new JTextField(10);
+        _dobField = new JTextField(15);
         listComponents.add(_dobField);
 
         // Email
         listComponents.add(new JLabel("Email address"));
-        _emailField = new JTextField(10);
+        _emailField = new JTextField(15);
         listComponents.add(_emailField);
 
         // Relation
@@ -43,18 +43,30 @@ public abstract class accountEdition extends TabBase {
 
         // Job
         listComponents.add(new JLabel("Job"));
-        _jobField = new JTextField(10);
+        _jobField = new JTextField(15);
         listComponents.add(_jobField);
 
 
         // Address
         listComponents.add(new JLabel("Address"));
-        _addressField = new JTextArea(5,10);
+        _addressField = new JTextArea(5,15);
+        _addressField.setLineWrap(true);
         listComponents.add(_addressField);
 
         // Password
         listComponents.add(new JLabel("Password"));
-        _passwordField = new JPasswordField(10);
+        _passwordField = new JPasswordField(15);
         listComponents.add(_passwordField);
+    }
+
+    protected void emptyFields() {
+        _firstNameField.setText(null);
+        _lastNameField.setText(null);
+        _dobField.setText(null);
+        _emailField.setText(null);
+        _relationComboBox.setSelectedIndex(1);
+        _jobField.setText(null);
+        _addressField.setText(null);
+        _passwordField.setText(null);
     }
 }
