@@ -1,0 +1,139 @@
+package GUI.Tab.Patient;
+
+import Project.JUtilities;
+import Project.Main;
+import Project.Utilities;
+import oo.Appointment;
+
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableModel;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+
+public class ListAppointments extends GUI.TabBase implements DocumentListener {
+    // GUI
+    private JTable _table;
+    private DefaultTableModel _modelTable;
+    private JTextField _searchField;
+
+    private ArrayList<Appointment> allAppointments;
+    private ArrayList<Appointment> searchedAppointments;
+
+    ArrayList<String> columns = loadColumns();
+
+    public ListAppointments() {
+        SetElements();
+        DisplayElements(1);
+    }
+
+    @Override
+    protected void SetElements() {
+        // Search field
+        listComponents.add(new JLabel("Search by date"));
+        _searchField = new JTextField();
+        _searchField.getDocument().addDocumentListener(this);
+        listComponents.add(_searchField);
+
+        // Table
+        _modelTable = new DefaultTableModel();
+        // Non editable table
+        _table = new JTable(_modelTable) {
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        _table.getTableHeader().setReorderingAllowed(false);
+
+        JScrollPane _tableScrollPane = new JScrollPane(_table);
+        _tableScrollPane.setBorder(BorderFactory.createEmptyBorder());
+        listComponents.add(_tableScrollPane);
+    }
+
+    @Override
+    public void Load() {
+        loadData();
+        loadTable();
+    }
+
+    /**
+     * Load data into a table
+     */
+    private void loadTable() {
+        ArrayList<String[]> values = new ArrayList<>();
+        for (Appointment a : searchedAppointments) {
+            values.add(new String[]{
+                    Utilities.appointmentFormat.format(a.getAppointmentTime()),
+                    Utilities.capitalizeFirstLetter(a.getStatus()),
+                    Utilities.capitalizeFirstLetter(a.getType()),
+                    a.getPrice() + "€",
+                    a.getPayment(),
+                    a.isPayed() ? "Payed" : "Unpayed"
+            });
+        }
+
+        _modelTable = new DefaultTableModel(values.toArray(new Object[][]{}), columns.toArray());
+        _table.setModel(_modelTable);
+        JUtilities.resizeColumnWidth(_table);
+        JUtilities.setCellsAlignment(_table, SwingConstants.CENTER);
+    }
+
+    /**
+     * Set columns
+     *
+     * @return
+     */
+    private ArrayList<String> loadColumns() {
+        ArrayList<String> c = new ArrayList<>() {{
+            add("Date");
+            add("Status");
+            add("Type");
+            add("Price");
+            add("Payment");
+            add("Payed");
+        }};
+        return c;
+    }
+
+    /**
+     * Load data
+     */
+    private void loadData() {
+        allAppointments = Appointment.recoverAppointments(Main.user.get_id());
+        searchedAppointments = allAppointments;
+    }
+
+    /**
+     * Update list of appointment according to query
+     */
+    private void search() {
+        String query = _searchField.getText();
+        if (query.isEmpty()) { // If query is empty, we refill the table
+            searchedAppointments = allAppointments;
+        } else {
+            // Recovering values with stream
+            // Not a full lambda so it is easier to understand it
+            searchedAppointments = allAppointments.stream().filter(x -> {
+                return Utilities.appointmentFormat.format(x.getAppointmentTime()).contains(query);
+            }).collect(Collectors.toCollection(ArrayList::new));
+        }
+
+        loadTable();
+    }
+
+    @Override
+    public void insertUpdate(DocumentEvent e) {
+        search();
+    }
+
+    @Override
+    public void removeUpdate(DocumentEvent e) {
+        search();
+    }
+
+    @Override
+    public void changedUpdate(DocumentEvent e) {
+        search();
+    }
+}

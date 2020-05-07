@@ -3,16 +3,93 @@ package oo;
 import Project.Database.Prepared;
 import Project.ItemComboBox;
 import Project.Pair;
+import Project.Utilities;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Vector;
 
 public class Appointment {
+    private int idAppointment;
+    private String payment;
+    private boolean payed;
+    private String type;
+    private Date appointmentTime;
+    private double price;
+    private String status;
+
+    public Appointment(int idAppointment, String payment, boolean payed, String type, Date appointmentTime, double price, String status) {
+        this.idAppointment = idAppointment;
+        this.payment = payment;
+        this.payed = payed;
+        this.type = type;
+        this.appointmentTime = appointmentTime;
+        this.price = price;
+        this.status = status;
+    }
+
+    public int getIdAppointment() {
+        return idAppointment;
+    }
+
+    public String getPayment() {
+        return payment;
+    }
+
+    public boolean isPayed() {
+        return payed;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public Date getAppointmentTime() {
+        return appointmentTime;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public static ArrayList<Appointment> recoverAppointments(int idUser) {
+        ArrayList<Appointment> list = new ArrayList<>();
+
+        Prepared p = new Prepared("SELECT id_rdv, date_rdv, status, type_rdv, prix, paiement, payee " +
+                                    "FROM v_extended_appointment " +
+                                    "WHERE id_patient = ? " +
+                                    "ORDER BY date_rdv DESC");
+        p.setValue(1,idUser);
+
+        try {
+            ResultSet r = p.executeQuery();
+            while(r.next()) {
+                Appointment a = new Appointment(r.getInt(1),
+                                                r.getString(6),
+                                                r.getBoolean(7),
+                                                r.getString(4),
+                                                new Date(r.getTimestamp(2).getTime()),
+                                                r.getFloat(5),
+                                                r.getString(3));
+                list.add(a);
+            }
+        } catch (SQLException e) {
+            System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
+        }
+
+
+        return list;
+    }
+
     /**
      * Get a vector of formatted types of Appointment with their prices
      *
@@ -25,7 +102,7 @@ public class Appointment {
             ResultSet r = p.executeQuery();
             while (r.next()) {
                 String tmp = r.getString(1) + ": " + r.getInt(2) + "€";
-                tmp = tmp.substring(0, 1).toUpperCase() + tmp.substring(1);
+                tmp = Utilities.capitalizeFirstLetter(tmp);
                 formattedTypes.add(new ItemComboBox(r.getInt(3), tmp));
             }
         } catch (SQLException e) {
