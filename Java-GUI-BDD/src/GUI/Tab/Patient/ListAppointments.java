@@ -6,19 +6,22 @@ import Project.Utilities;
 import oo.Appointment;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
-public class ListAppointments extends GUI.TabBase implements ActionListener {
+public class ListAppointments extends GUI.TabBase implements DocumentListener {
     // GUI
     private JTable _table;
     private DefaultTableModel _modelTable;
+    private JTextField _searchField;
 
-    private ArrayList<Appointment> listAppointments;
+    private ArrayList<Appointment> allAppointments;
+    private ArrayList<Appointment> searchedAppointments;
+
+    ArrayList<String> columns = loadColumns();
 
     public ListAppointments() {
         SetElements();
@@ -27,6 +30,13 @@ public class ListAppointments extends GUI.TabBase implements ActionListener {
 
     @Override
     protected void SetElements() {
+        // Search field
+        listComponents.add(new JLabel("Search by date"));
+        _searchField = new JTextField();
+        _searchField.getDocument().addDocumentListener(this);
+        listComponents.add(_searchField);
+
+        // Table
         _modelTable = new DefaultTableModel();
         // Non editable table
         _table = new JTable(_modelTable) {
@@ -42,19 +52,38 @@ public class ListAppointments extends GUI.TabBase implements ActionListener {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-
+    public void Load() {
+        loadData();
+        loadTable();
     }
 
-    @Override
-    public void Load() {
-        _modelTable = new DefaultTableModel(loadData().toArray(new Object[][]{}), loadColumns().toArray());
+    /**
+     * Load data into a table
+     */
+    private void loadTable() {
+        ArrayList<String[]> values = new ArrayList<>();
+        for (Appointment a : searchedAppointments) {
+            values.add(new String[]{
+                    Utilities.appointmentFormat.format(a.getAppointmentTime()),
+                    Utilities.capitalizeFirstLetter(a.getStatus()),
+                    Utilities.capitalizeFirstLetter(a.getType()),
+                    a.getPrice() + "€",
+                    a.getPayment(),
+                    a.isPayed() ? "Payed" : "Unpayed"
+            });
+        }
+
+        _modelTable = new DefaultTableModel(values.toArray(new Object[][]{}), columns.toArray());
         _table.setModel(_modelTable);
         JUtilities.resizeColumnWidth(_table);
-        JUtilities.setCellsAlignment(_table,SwingConstants.CENTER);
-
+        JUtilities.setCellsAlignment(_table, SwingConstants.CENTER);
     }
 
+    /**
+     * Set columns
+     *
+     * @return
+     */
     private ArrayList<String> loadColumns() {
         ArrayList<String> c = new ArrayList<>() {{
             add("Date");
@@ -67,21 +96,44 @@ public class ListAppointments extends GUI.TabBase implements ActionListener {
         return c;
     }
 
-    private ArrayList<String[]> loadData() {
-        ArrayList<String[]> values = new ArrayList<>();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm");
+    /**
+     * Load data
+     */
+    private void loadData() {
+        allAppointments = Appointment.recoverAppointments(Main.user.get_id());
+        searchedAppointments = allAppointments;
+    }
 
-        listAppointments = Appointment.recoverAppointments(Main.user.get_id());
-        for (Appointment a: listAppointments) {
-            values.add(new String[] {
-                    dateFormat.format(a.getAppointmentTime()),
-                    Utilities.capitalizeFirstLetter(a.getStatus()),
-                    Utilities.capitalizeFirstLetter(a.getType()),
-                    a.getPrice() + "€",
-                    a.getPayment(),
-                    a.isPayed() ? "Payed" : "Unpayed"
-            });
+    /**
+     * Update list of appointment according to query
+     */
+    private void search() {
+        String query = _searchField.getText();
+        if (query.isEmpty()) { // If query is empty, we refill the table
+            searchedAppointments = allAppointments;
+        } else {
+            // Recovering values with stream
+            // Not a full lambda so it is easier to understand it
+            searchedAppointments = allAppointments.stream().filter(x -> {
+                return Utilities.appointmentFormat.format(x.getAppointmentTime()).contains(query);
+            }).collect(Collectors.toCollection(ArrayList::new));
         }
-        return values;
+
+        loadTable();
+    }
+
+    @Override
+    public void insertUpdate(DocumentEvent e) {
+        search();
+    }
+
+    @Override
+    public void removeUpdate(DocumentEvent e) {
+        search();
+    }
+
+    @Override
+    public void changedUpdate(DocumentEvent e) {
+        search();
     }
 }

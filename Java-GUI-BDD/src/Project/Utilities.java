@@ -1,5 +1,7 @@
 package Project;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
@@ -7,6 +9,8 @@ import java.util.Arrays;
  * Class that holds different functions that are too general too be implemented in a specific class
  */
 public class Utilities {
+    public static final DateFormat appointmentFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm");
+
     /**
      * Convert an object into a string of length by adding '0' at beginning
      *
