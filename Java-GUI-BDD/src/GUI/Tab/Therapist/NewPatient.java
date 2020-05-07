@@ -1,6 +1,7 @@
 package GUI.Tab.Therapist;
 
 
+import Project.Main;
 import oo.Patient;
 
 import javax.swing.*;
@@ -51,6 +52,8 @@ public class NewPatient extends GUI.Common.accountEdition implements ActionListe
                 JOptionPane.showMessageDialog(this, "Incorrect " + result, "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(this, "Patient created", "Success", JOptionPane.INFORMATION_MESSAGE);
+                Main.therapistWindow.dispose();
+                Main.therapistWindow.Load();
             }
         }
     }
