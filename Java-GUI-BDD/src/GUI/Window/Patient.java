@@ -25,10 +25,13 @@ public class Patient extends GUI.PanelBase {
         addLogOutButtonToTab();
     }
 
-    public void Load() { // TODO : Put loading of data in tab in another public subfunction
-        // Load each tab
+    public void LoadTabs() {
         _editPanel.Load();
         _listAppointments.Load();
+    }
+
+    public void Load() {
+        LoadTabs();
         setFrame("Patient Panel");
     }
 }
