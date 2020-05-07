@@ -29,6 +29,9 @@ public abstract class PanelBase extends JPanel implements ActionListener {
     public void Load() {
     }
 
+    public void LoadTabs() {
+    }
+
     /**
      * Display the window
      *

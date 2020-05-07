@@ -32,9 +32,15 @@ public class Therapist extends GUI.PanelBase {
         addLogOutButtonToTab();
     }
 
-    public void Load() {
-        // Load each tab
+    public void LoadTabs() {
+        _seePatientsPanel.Load();
         _newAppointmentPanel.Load();
+    }
+
+    public void Load() {
+        LoadTabs();
         setFrame("Therapist Panel");
     }
+
+
 }

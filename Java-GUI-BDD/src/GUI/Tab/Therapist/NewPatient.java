@@ -19,7 +19,7 @@ public class NewPatient extends GUI.Common.accountEdition implements ActionListe
         super.SetElements();
 
         listComponents.add(new JLabel("How did it hear of us?"));
-        _meanField = new JTextField(10);
+        _meanField = new JTextField(15);
         listComponents.add(_meanField);
 
         // Button
@@ -52,9 +52,15 @@ public class NewPatient extends GUI.Common.accountEdition implements ActionListe
                 JOptionPane.showMessageDialog(this, "Incorrect " + result, "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(this, "Patient created", "Success", JOptionPane.INFORMATION_MESSAGE);
-                Main.therapistWindow.dispose();
-                Main.therapistWindow.Load();
+                emptyFields();
+                Main.therapistWindow.LoadTabs();
             }
         }
+    }
+
+    @Override
+    protected void emptyFields() {
+        super.emptyFields();
+        _meanField.setText(null);
     }
 }

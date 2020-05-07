@@ -109,6 +109,8 @@ BEGIN
 	DECLARE v_id_job INT;
 	DECLARE v_actual_name_job VARCHAR(42);
 	DECLARE v_actual_job INT;
+
+	SHOW ERRORS;
 	
 	SELECT id_job INTO v_id_job FROM job WHERE nom = job_name; -- Checking if job name is already in table
 	IF (v_id_job IS NULL) THEN
@@ -123,8 +125,10 @@ BEGIN
 	SELECT MAX(id_historique_job) INTO v_actual_job FROM historique_job WHERE id_patient = patient_id; -- Selecting most recent job
 	SELECT nom INTO v_actual_name_job FROM V_historique_job_complet WHERE id_historique_job = v_actual_job; -- Selecting its name
 	
-	IF(v_actual_name_job != job_name) THEN -- Checking if the has changed
-		UPDATE historique_job SET date_fin = DATE(NOW()) WHERE id_historique_job = v_actual_job;
+	IF(v_actual_job IS NULL OR v_actual_name_job != job_name) THEN -- Checking if the has changed
+	    IF(v_actual_job IS NOT NULL) THEN
+		    UPDATE historique_job SET date_fin = DATE(NOW()) WHERE id_historique_job = v_actual_job;
+		END IF;
 		INSERT INTO historique_job(id_patient, id_job) VALUES (patient_id, v_id_job);
 	END IF;
 END; |
@@ -138,24 +142,25 @@ CREATE OR REPLACE DEFINER = CURRENT_USER
 PROCEDURE new_patient(IN fname VARCHAR(42), IN lname VARCHAR(42),
 													 IN mail VARCHAR(50), IN dob DATE, 
 													 IN relation BOOLEAN, IN job_name VARCHAR(42), 
-													 IN moyen VARCHAR(42), IN passw VARCHAR(200), 
+													 IN moyen VARCHAR(42), IN passw VARCHAR(200),
+													 IN address VARCHAR(200),
 													 OUT p_valid BOOLEAN)
 BEGIN
 	DECLARE v_id INT;
 
-	SET @insertSQL := CONCAT('INSERT INTO patient(nom, prenom, dob, moyen, couple, email, password)  VALUES ("',
-				lname,'","',fname,'","',dob,'","',moyen,'","',relation,'","',mail,'","',passw,'")');-- Inserting patient in prepared stmt
+	SET @insertSQL := CONCAT('INSERT INTO patient(nom, prenom, dob, moyen, couple, email, password, adresse)  VALUES ("',
+				lname,'","',fname,'","',dob,'","',moyen,'","',relation,'","',mail,'","',passw,'","',address,'")'); -- Inserting patient in prepared stmt
 	PREPARE stmt FROM @insertSQL;
 	EXECUTE stmt;
 	DEALLOCATE PREPARE stmt;
 	
-	IF(ROW_COUNT() = 0) THEN -- If insert failed
+	IF !EXISTS(SELECT id_patient FROM patient where email = mail) THEN -- If insert failed
 		SET p_valid = FALSE;
 	ELSE -- If success, we add the job
 		SELECT id_patient INTO v_id FROM patient WHERE email = mail;
 		CALL new_job_patient(job_name, v_id);
+		SET p_valid = TRUE;
 	END IF;
-	SET p_valid = TRUE;
 END; |
 DELIMITER ;
 
