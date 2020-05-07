@@ -19,11 +19,14 @@ public class Therapist extends GUI.PanelBase {
         int i = 0;
 
         _seePatientsPanel = new SeePatient();
-        _newPatient = new NewPatient();
-        // Link every tab to every panel
         tabbedPane.addTab("All Patients", _seePatientsPanel);
+        tabbedPane.setMnemonicAt(i++, KeyEvent.VK_1);
+
+        _newPatient = new NewPatient();
         tabbedPane.addTab("New Patient", _newPatient);
         tabbedPane.setMnemonicAt(i++, KeyEvent.VK_1);
+        // Link every tab to every panel
+
 
         addLogOutButtonToTab();
     }

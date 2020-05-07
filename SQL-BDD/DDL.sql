@@ -30,8 +30,8 @@ CREATE OR REPLACE TABLE PATIENT(
   couple BOOLEAN DEFAULT false,
   categorie VARCHAR(42) NOT NULL,
   moyen VARCHAR(42),
-  mail VARCHAR(42) NOT NULL,     -- User has to connect
-  mdp VARCHAR(16) NOT NULL,      -- User has to connect  (when we do the access rights, do not let the psycho know it)
+  email VARCHAR(42) NOT NULL,     -- User has to connect
+  password VARCHAR(16) NOT NULL,      -- User has to connect  (when we do the access rights, do not let the psycho know it)
   id_adresse INT, -- Adress can be null
   PRIMARY KEY (id_patient),
   FOREIGN KEY (id_adresse) REFERENCES ADRESSE (id_adresse) ON DELETE SET NULL

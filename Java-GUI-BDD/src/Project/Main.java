@@ -3,7 +3,6 @@ package Project;
 import GUI.Window.Login;
 import oo.User;
 
-import java.sql.SQLException;
 
 public class Main {
     // Windows

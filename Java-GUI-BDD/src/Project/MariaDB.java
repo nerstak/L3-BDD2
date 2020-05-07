@@ -9,7 +9,7 @@ public class MariaDB<T> {
 
     // Credentials
     private static final String _user = "root";
-    private static final String _pass = "M@r1aDB";
+    private static final String _pass = "root";
 
     private static Connection _connection = null;
 
