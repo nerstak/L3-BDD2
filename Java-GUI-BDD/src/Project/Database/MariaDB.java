@@ -48,6 +48,7 @@ public class MariaDB {
         try {
             System.out.println("Rollback...");
             _connection.rollback();
+            transactionError = false;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -73,7 +74,6 @@ public class MariaDB {
             MariaDB.rollback();
             return false;
         }
-
     }
 
     /**
