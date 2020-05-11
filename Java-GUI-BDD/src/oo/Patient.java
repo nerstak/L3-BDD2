@@ -1,6 +1,7 @@
 package oo;
 
 import Project.Database.Callable;
+import Project.Database.MariaDB;
 import Project.Database.Prepared;
 import Project.Utilities;
 
@@ -192,6 +193,10 @@ public class Patient extends User {
         c.setValue(1, job);
         c.setValue(2, get_id());
         c.executeUpdate();
+
+        if (!MariaDB.endQuery()) {
+            return "database error";
+        }
         return "";
     }
 

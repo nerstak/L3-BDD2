@@ -1,7 +1,6 @@
 package GUI.Tab.Patient;
 
 import Project.Main;
-import oo.User;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -61,6 +60,9 @@ public class Edit extends GUI.Common.accountEdition implements ActionListener {
             );
             if (!result.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Incorrect " + result, "Error", JOptionPane.ERROR_MESSAGE);
+                if (result.equals("database error")) {
+                    Load();
+                }
             } else {
                 JOptionPane.showMessageDialog(this, "Information updated", "Success", JOptionPane.INFORMATION_MESSAGE);
             }

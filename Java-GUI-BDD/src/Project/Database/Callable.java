@@ -14,6 +14,7 @@ public class Callable extends MariaDB implements Statement {
         try {
             _stmt = _connection.prepareCall(_request);
         } catch (SQLException e) {
+            MariaDB.transactionError = true;
             System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
         }
 
@@ -23,6 +24,7 @@ public class Callable extends MariaDB implements Statement {
         try {
             _stmt.setObject(index, obj);
         } catch (SQLException e) {
+            MariaDB.transactionError = true;
             System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
         }
 
@@ -32,6 +34,7 @@ public class Callable extends MariaDB implements Statement {
         try {
             _stmt.setObject(index, obj, type);
         } catch (SQLException e) {
+            MariaDB.transactionError = true;
             System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
         }
     }
@@ -40,6 +43,7 @@ public class Callable extends MariaDB implements Statement {
         try {
             return _stmt.executeQuery();
         } catch (SQLException e) {
+            MariaDB.transactionError = true;
             System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
             return null;
         }
@@ -49,6 +53,7 @@ public class Callable extends MariaDB implements Statement {
         try {
             _stmt.executeUpdate();
         } catch (SQLException e) {
+            MariaDB.transactionError = true;
             System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
         }
     }
@@ -57,6 +62,7 @@ public class Callable extends MariaDB implements Statement {
         try {
             _stmt.registerOutParameter(index, type);
         } catch (SQLException e) {
+            MariaDB.transactionError = true;
             System.err.format("SQL State (registerOutParameter): %s\n%s", e.getSQLState(), e.getMessage());
         }
     }
@@ -65,6 +71,7 @@ public class Callable extends MariaDB implements Statement {
         try {
             return _stmt.getInt(index);
         } catch (SQLException e) {
+            MariaDB.transactionError = true;
             System.err.format("SQL State (getInt): %s\n%s", e.getSQLState(), e.getMessage());
             return 0;
         }
@@ -74,6 +81,7 @@ public class Callable extends MariaDB implements Statement {
         try {
             return _stmt.getString(index);
         } catch (SQLException e) {
+            MariaDB.transactionError = true;
             System.err.format("SQL State (getString): %s\n%s", e.getSQLState(), e.getMessage());
             return "";
         }
@@ -83,6 +91,7 @@ public class Callable extends MariaDB implements Statement {
         try {
             return _stmt.getBoolean(index);
         } catch (SQLException e) {
+            MariaDB.transactionError = true;
             System.err.format("SQL State (getBoolean): %s\n%s", e.getSQLState(), e.getMessage());
             return false;
         }
