@@ -114,10 +114,10 @@ public class Patient extends User {
         c.executeUpdate();
 
         Boolean result = c.getBoolean(index);
-        if(result) {
+        if (result && MariaDB.endQuery()) {
             return "";
         } else {
-            return "creation";
+            return "database error";
         }
     }
 
