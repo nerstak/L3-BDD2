@@ -32,8 +32,8 @@ public class Patient extends User {
         try {
             ResultSet x = m.executeQuery();
             if (x.next()) {
-                _firstName = x.getString(1);
-                _lastName = x.getString(2);
+                _lastName = x.getString(1);
+                _firstName = x.getString(2);
                 _mail = x.getString(3);
                 _dob = x.getDate(4);
                 _relation = x.getBoolean(5);
