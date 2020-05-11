@@ -62,7 +62,10 @@ public abstract class PanelBase extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == _logoutButton) {
-            Main.loadLogin();
+            int dialogResult = JOptionPane.showConfirmDialog (null, "Are you sure you want to log out?","Warning", JOptionPane.YES_OPTION);
+            if(dialogResult == JOptionPane.YES_OPTION){
+                Main.loadLogin();
+            }
         }
     }
 
