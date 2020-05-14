@@ -51,7 +51,7 @@ public abstract class accountEdition extends TabBase {
         listComponents.add(new JLabel("Address"));
         _addressField = new JTextArea(5,15);
         _addressField.setLineWrap(true);
-        listComponents.add(_addressField);
+        listComponents.add(new JScrollPane(_addressField));
 
         // Password
         listComponents.add(new JLabel("Password"));

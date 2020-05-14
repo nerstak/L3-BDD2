@@ -6,7 +6,7 @@ DROP USER IF EXISTS login;
 DROP USER IF EXISTS therapist;
 DROP USER IF EXISTS patient;
 
--- CREATE USER 'PSY' IDENTIFIED BY 'admin';
+
 -- Creation of tables
 
 CREATE TABLE THERAPIST (
@@ -272,6 +272,7 @@ GRANT SELECT ON rdvs.v_extended_appointment TO therapist;
 
 CREATE USER 'patient' IDENTIFIED BY 'patientPassword';
 GRANT SELECT ON rdvs.consultation TO patient;
+GRANT EXECUTE ON PROCEDURE new_job_patient TO patient;
 GRANT EXECUTE ON PROCEDURE check_dob TO patient;
 GRANT SELECT, INSERT ON rdvs.historique_job TO patient;
 GRANT SELECT, INSERT ON rdvs.job TO patient;
@@ -280,6 +281,3 @@ GRANT SELECT, UPDATE ON rdvs.rdv TO patient; -- CAN UPDATE IF WE INCLUDE MODIFIC
 GRANT SELECT ON rdvs.type_rdv TO patient;
 GRANT SELECT ON rdvs.v_historique_job_complet TO patient;
 GRANT SELECT ON rdvs.v_extended_appointment TO patient;
-
-
-

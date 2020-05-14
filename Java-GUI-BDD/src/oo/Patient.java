@@ -1,6 +1,7 @@
 package oo;
 
 import Project.Database.Callable;
+import Project.Database.MariaDB;
 import Project.Database.Prepared;
 import Project.Utilities;
 
@@ -32,8 +33,8 @@ public class Patient extends User {
         try {
             ResultSet x = m.executeQuery();
             if (x.next()) {
-                _firstName = x.getString(1);
-                _lastName = x.getString(2);
+                _lastName = x.getString(1);
+                _firstName = x.getString(2);
                 _mail = x.getString(3);
                 _dob = x.getDate(4);
                 _relation = x.getBoolean(5);
@@ -113,10 +114,10 @@ public class Patient extends User {
         c.executeUpdate();
 
         Boolean result = c.getBoolean(index);
-        if(result) {
+        if (result && MariaDB.endQuery()) {
             return "";
         } else {
-            return "creation";
+            return "database error";
         }
     }
 
@@ -192,6 +193,10 @@ public class Patient extends User {
         c.setValue(1, job);
         c.setValue(2, get_id());
         c.executeUpdate();
+
+        if (!MariaDB.endQuery()) {
+            return "database error";
+        }
         return "";
     }
 

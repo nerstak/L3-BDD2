@@ -14,6 +14,7 @@ public class Prepared extends MariaDB implements Statement {
         try {
             _stmt = _connection.prepareStatement(_request);
         } catch (SQLException e) {
+            MariaDB.transactionError = true;
             System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
         }
     }
@@ -22,15 +23,16 @@ public class Prepared extends MariaDB implements Statement {
         try {
             _stmt.setObject(index, obj);
         } catch (SQLException e) {
+            MariaDB.transactionError = true;
             System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
         }
-
     }
 
     public <T> void setValue(Integer index, T obj, int type) {
         try {
             _stmt.setObject(index, obj, type);
         } catch (SQLException e) {
+            MariaDB.transactionError = true;
             System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
         }
     }
@@ -39,6 +41,7 @@ public class Prepared extends MariaDB implements Statement {
         try {
             return _stmt.executeQuery();
         } catch (SQLException e) {
+            MariaDB.transactionError = true;
             System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
             return null;
         }
@@ -48,6 +51,7 @@ public class Prepared extends MariaDB implements Statement {
         try {
             _stmt.executeUpdate();
         } catch (SQLException e) {
+            MariaDB.transactionError = true;
             System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
         }
     }
