@@ -1,6 +1,7 @@
 package GUI.Tab.Patient;
 
 import Project.Utilities;
+import oo.Appointment;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -42,11 +43,27 @@ public class ListAppointments extends GUI.Common.tableAppointment implements Doc
 
     @Override
     public void Load() {
+        super.Load();
         loadData();
-        loadTable();
+        formatTable();
     }
 
+    @Override
+    protected void formatTable() {
+        ArrayList<String[]> values = new ArrayList<>();
+        for (Appointment a : searchedAppointments) {
+            values.add(new String[]{
+                    Utilities.appointmentFormat.format(a.getAppointmentTime()),
+                    Utilities.capitalizeFirstLetter(a.getStatus()),
+                    Utilities.capitalizeFirstLetter(a.getType()),
+                    a.getPrice() + "€",
+                    a.getPayment(),
+                    a.isPayed() ? "Payed" : "Unpayed"
+            });
+        }
 
+        putValuesInTable(values);
+    }
 
     /**
      * Update list of appointment according to query
@@ -63,7 +80,7 @@ public class ListAppointments extends GUI.Common.tableAppointment implements Doc
             }).collect(Collectors.toCollection(ArrayList::new));
         }
 
-        loadTable();
+        formatTable();
     }
 
     @Override

@@ -2,7 +2,6 @@ package GUI.Common;
 
 import Project.JUtilities;
 import Project.Main;
-import Project.Utilities;
 import oo.Appointment;
 
 import javax.swing.*;
@@ -18,31 +17,32 @@ public class tableAppointment extends GUI.TabBase {
     protected ArrayList<Appointment> allAppointments;
     protected ArrayList<Appointment> searchedAppointments;
 
-    ArrayList<String> columns = loadColumns();
+    protected ArrayList<String> columns;
+
+    @Override
+    public void Load() {
+        loadColumns();
+    }
 
 
     /**
-     * Load data into a table
+     * Load data into a table after formatting
+     * Overridable
      */
-    protected void loadTable() {
-        ArrayList<String[]> values = new ArrayList<>();
-        for (Appointment a : searchedAppointments) {
-            values.add(new String[]{
-                    Utilities.appointmentFormat.format(a.getAppointmentTime()),
-                    Utilities.capitalizeFirstLetter(a.getStatus()),
-                    Utilities.capitalizeFirstLetter(a.getType()),
-                    a.getPrice() + "€",
-                    a.getPayment(),
-                    a.isPayed() ? "Payed" : "Unpayed"
-            });
-        }
+    protected void formatTable() {
+    }
 
+    /**
+     * Put loaded data in table
+     *
+     * @param values Loaded and formatted data
+     */
+    protected void putValuesInTable(ArrayList<String[]> values) {
         _modelTable = new DefaultTableModel(values.toArray(new Object[][]{}), columns.toArray());
         _table.setModel(_modelTable);
         JUtilities.resizeColumnWidth(_table);
         JUtilities.setCellsAlignment(_table, SwingConstants.CENTER);
     }
-
 
     /**
      * Load data
@@ -54,11 +54,9 @@ public class tableAppointment extends GUI.TabBase {
 
     /**
      * Set columns
-     *
-     * @return
      */
-    private ArrayList<String> loadColumns() {
-        ArrayList<String> c = new ArrayList<>() {{
+    private void loadColumns() {
+        columns = new ArrayList<>() {{
             add("Date");
             add("Status");
             add("Type");
@@ -66,7 +64,10 @@ public class tableAppointment extends GUI.TabBase {
             add("Payment");
             add("Payed");
         }};
-        return c;
+
+        if (Main.user.getType().equals("Therapist")) {
+            columns.add(2, "Mail");
+        }
     }
 
 }

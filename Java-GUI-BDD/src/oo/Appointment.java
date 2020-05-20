@@ -22,8 +22,9 @@ public class Appointment {
     private Date appointmentTime;
     private double price;
     private String status;
+    private String email;
 
-    public Appointment(int idAppointment, String payment, boolean payed, String type, Date appointmentTime, double price, String status) {
+    public Appointment(int idAppointment, String payment, boolean payed, String type, Date appointmentTime, double price, String status, String email) {
         this.idAppointment = idAppointment;
         this.payment = payment;
         this.payed = payed;
@@ -31,6 +32,7 @@ public class Appointment {
         this.appointmentTime = appointmentTime;
         this.price = price;
         this.status = status;
+        this.email = email;
     }
 
     public int getIdAppointment() {
@@ -61,18 +63,24 @@ public class Appointment {
         return status;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     public static ArrayList<Appointment> recoverAppointments(int idUser) {
         ArrayList<Appointment> list = new ArrayList<>();
 
         Prepared p;
         if (idUser == -1) {
-            p = new Prepared("SELECT id_rdv, date_rdv, status, type_rdv, prix, paiement, payee " +
+            p = new Prepared("SELECT id_rdv, date_rdv, status, type_rdv, prix, paiement, payee, v_extended_appointment.id_patient, patient.email " +
                     "FROM v_extended_appointment " +
+                    "INNER JOIN patient ON v_extended_appointment.id_patient = patient.id_patient " +
                     "ORDER BY date_rdv DESC");
         } else {
-            p = new Prepared("SELECT id_rdv, date_rdv, status, type_rdv, prix, paiement, payee " +
-                    "FROM v_extended_appointment " +
-                    "WHERE id_patient = ? " +
+            p = new Prepared("SELECT id_rdv, date_rdv, status, type_rdv, prix, paiement, payee, v_extended_appointment.id_patient, patient.email " +
+                    "FROM  v_extended_appointment " +
+                    "INNER JOIN patient ON v_extended_appointment.id_patient = patient.id_patient " +
+                    "WHERE v_extended_appointment.id_patient = ? " +
                     "ORDER BY date_rdv DESC");
             p.setValue(1, idUser);
         }
@@ -87,7 +95,8 @@ public class Appointment {
                                                 r.getString(4),
                                                 new Date(r.getTimestamp(2).getTime()),
                                                 r.getFloat(5),
-                                                r.getString(3));
+                        r.getString(3),
+                        r.getString(9));
                 list.add(a);
             }
         } catch (SQLException e) {
