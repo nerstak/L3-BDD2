@@ -1,16 +1,12 @@
-package GUI.Tab.Patient;
-
-import Project.Utilities;
+package GUI.Tab.Therapist;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
-import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 public class ListAppointments extends GUI.Common.tableAppointment implements DocumentListener {
-    private JTextField _searchField;
+    private JTextField _searchFieldDate;
 
     public ListAppointments() {
         SetElements();
@@ -21,9 +17,9 @@ public class ListAppointments extends GUI.Common.tableAppointment implements Doc
     protected void SetElements() {
         // Search field
         listComponents.add(new JLabel("Search by date"));
-        _searchField = new JTextField();
-        _searchField.getDocument().addDocumentListener(this);
-        listComponents.add(_searchField);
+        _searchFieldDate = new JTextField();
+        _searchFieldDate.getDocument().addDocumentListener(this);
+        listComponents.add(_searchFieldDate);
 
         // Table
         _modelTable = new DefaultTableModel();
@@ -46,24 +42,8 @@ public class ListAppointments extends GUI.Common.tableAppointment implements Doc
         loadTable();
     }
 
-
-
-    /**
-     * Update list of appointment according to query
-     */
     private void search() {
-        String query = _searchField.getText();
-        if (query.isEmpty()) { // If query is empty, we refill the table
-            searchedAppointments = allAppointments;
-        } else {
-            // Recovering values with stream
-            // Not a full lambda so it is easier to understand it
-            searchedAppointments = allAppointments.stream().filter(x -> {
-                return Utilities.appointmentFormat.format(x.getAppointmentTime()).contains(query);
-            }).collect(Collectors.toCollection(ArrayList::new));
-        }
 
-        loadTable();
     }
 
     @Override

@@ -64,11 +64,19 @@ public class Appointment {
     public static ArrayList<Appointment> recoverAppointments(int idUser) {
         ArrayList<Appointment> list = new ArrayList<>();
 
-        Prepared p = new Prepared("SELECT id_rdv, date_rdv, status, type_rdv, prix, paiement, payee " +
-                                    "FROM v_extended_appointment " +
-                                    "WHERE id_patient = ? " +
-                                    "ORDER BY date_rdv DESC");
-        p.setValue(1,idUser);
+        Prepared p;
+        if (idUser == -1) {
+            p = new Prepared("SELECT id_rdv, date_rdv, status, type_rdv, prix, paiement, payee " +
+                    "FROM v_extended_appointment " +
+                    "ORDER BY date_rdv DESC");
+        } else {
+            p = new Prepared("SELECT id_rdv, date_rdv, status, type_rdv, prix, paiement, payee " +
+                    "FROM v_extended_appointment " +
+                    "WHERE id_patient = ? " +
+                    "ORDER BY date_rdv DESC");
+            p.setValue(1, idUser);
+        }
+
 
         try {
             ResultSet r = p.executeQuery();

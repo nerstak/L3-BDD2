@@ -1,5 +1,6 @@
 package GUI.Window;
 
+import GUI.Tab.Therapist.ListAppointments;
 import GUI.Tab.Therapist.NewAppointment;
 import GUI.Tab.Therapist.NewPatient;
 import GUI.Tab.Therapist.SeePatient;
@@ -12,6 +13,7 @@ public class Therapist extends GUI.PanelBase {
     private final TabBase _seePatientsPanel;
     private final TabBase _newPatientPanel;
     private final TabBase _newAppointmentPanel;
+    private final TabBase _listAppointments;
 
     public Therapist()
     {
@@ -29,12 +31,17 @@ public class Therapist extends GUI.PanelBase {
         tabbedPane.addTab("Create appointment", _newAppointmentPanel);
         tabbedPane.setMnemonicAt(i++, KeyEvent.VK_1);
 
+        _listAppointments = new ListAppointments();
+        tabbedPane.addTab("List of appointments", _listAppointments);
+        tabbedPane.setMnemonicAt(i++, KeyEvent.VK_1);
+
         addLogOutButtonToTab();
     }
 
     public void LoadTabs() {
         _seePatientsPanel.Load();
         _newAppointmentPanel.Load();
+        _listAppointments.Load();
     }
 
     public void Load() {
