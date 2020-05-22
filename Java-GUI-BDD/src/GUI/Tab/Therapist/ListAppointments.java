@@ -194,8 +194,10 @@ public class ListAppointments extends GUI.Common.tableAppointment implements Doc
         } else if (e.getSource() == _payedButton) {
             selectedAppointment.setPayment(JOptionPane.showInputDialog(this,
                     "Mean of payment", "Mean of payment", JOptionPane.PLAIN_MESSAGE));
-            selectedAppointment.setPayed(true);
-            appointmentChanged = true;
+            if (!selectedAppointment.getPayment().isBlank()) {
+                selectedAppointment.setPayed(true);
+                appointmentChanged = true;
+            }
         }
         updateAppointment();
     }
