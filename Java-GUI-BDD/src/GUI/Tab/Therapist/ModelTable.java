@@ -1,9 +1,8 @@
 package GUI.Tab.Therapist;
 
-import Project.MariaDB;
+import Project.Database.Prepared;
 
 import javax.swing.table.AbstractTableModel;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -22,8 +21,8 @@ public class ModelTable extends AbstractTableModel {
 
         try
         {
-            MariaDB m = new MariaDB("SELECT id_patient FROM patient");
-            ResultSet rs = m.executeQuery();
+            Prepared p = new Prepared("SELECT id_patient FROM patient");
+            ResultSet rs = p.executeQuery();
             while(rs.next())
                 size++;
 
@@ -46,8 +45,8 @@ public class ModelTable extends AbstractTableModel {
         {
             int i = 0;
 
-            MariaDB m = new MariaDB("SELECT nom, prenom, email, categorie, moyen, dob from patient");
-            ResultSet rs = m.executeQuery();
+            Prepared p = new Prepared("SELECT nom, prenom, email, categorie, moyen, dob from patient");
+            ResultSet rs = p.executeQuery();
 
             while(rs.next())
             {
@@ -76,9 +75,9 @@ public class ModelTable extends AbstractTableModel {
         {
             int i = 0;
 
-            MariaDB m = new MariaDB("SELECT nom, prenom, email, categorie, moyen, dob from patient WHERE prenom = ?");
-            m.setValue(1, name);
-            ResultSet rs = m.executeQuery();
+            Prepared p = new Prepared("SELECT nom, prenom, email, categorie, moyen, dob from patient WHERE prenom = ?");
+            p.setValue(1, name);
+            ResultSet rs = p.executeQuery();
 
             while(rs.next())
             {

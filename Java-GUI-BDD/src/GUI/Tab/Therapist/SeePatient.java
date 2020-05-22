@@ -1,6 +1,7 @@
 package GUI.Tab.Therapist;
 
 import GUI.TabBase;
+import Project.Database.Prepared;
 import Project.Main;
 import Project.MariaDB;
 import oo.Patient;
@@ -86,7 +87,7 @@ public class SeePatient<T extends Therapist> extends TabBase implements ListSele
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        if(!_table.getSelectionModel().isSelectionEmpty())
+       /** if(!_table.getSelectionModel().isSelectionEmpty())
         {
             _selectedRow = _table.getSelectionModel().getMinSelectionIndex();
             Integer IDPatient = 0;
@@ -113,7 +114,7 @@ public class SeePatient<T extends Therapist> extends TabBase implements ListSele
             catch (SQLException f) {
                 System.err.format("\nSQL State: %s\n%s", f.getSQLState(), f.getMessage());
             }
-        }
+        } **/
     }
 
     @Override
@@ -131,12 +132,8 @@ public class SeePatient<T extends Therapist> extends TabBase implements ListSele
         search();
     }
 
-    /**
-     * Load the correct window of the patient, which replaces the actual one (it's horrible to look at, we'll have to do it in a better way I think)
-     */
     private void loadWindow() {
-        Main.disposeAllWindows();
-        setVisible(false);
-        Main.patientWindow.Load();
+        Main.therapistWindow.dispose();
+        Main.therapistWindow.Load();
     }
 }
