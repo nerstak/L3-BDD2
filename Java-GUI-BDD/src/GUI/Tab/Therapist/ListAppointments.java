@@ -1,5 +1,6 @@
 package GUI.Tab.Therapist;
 
+import GUI.Window.ConsultationDialog;
 import Project.Utilities;
 import oo.Appointment;
 
@@ -11,6 +12,8 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -56,6 +59,13 @@ public class ListAppointments extends GUI.Common.tableAppointment implements Doc
             }
         };
         _table.getSelectionModel().addListSelectionListener(this);
+        _table.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    handleDialog();
+                }
+            }
+        });
         _table.getTableHeader().setReorderingAllowed(false);
 
         JScrollPane _tableScrollPane = new JScrollPane(_table);
@@ -228,5 +238,9 @@ public class ListAppointments extends GUI.Common.tableAppointment implements Doc
             search();
             _table.setRowSelectionInterval(rowAppointment, rowAppointment);
         }
+    }
+
+    private void handleDialog() {
+        ConsultationDialog c = new ConsultationDialog(selectedAppointment);
     }
 }
