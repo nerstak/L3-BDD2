@@ -1,7 +1,5 @@
 package GUI.Tab.Patient;
 
-import Project.JUtilities;
-import Project.Main;
 import Project.Utilities;
 import oo.Appointment;
 
@@ -12,16 +10,8 @@ import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-public class ListAppointments extends GUI.TabBase implements DocumentListener {
-    // GUI
-    private JTable _table;
-    private DefaultTableModel _modelTable;
+public class ListAppointments extends GUI.Common.tableAppointment implements DocumentListener {
     private JTextField _searchField;
-
-    private ArrayList<Appointment> allAppointments;
-    private ArrayList<Appointment> searchedAppointments;
-
-    ArrayList<String> columns = loadColumns();
 
     public ListAppointments() {
         SetElements();
@@ -53,14 +43,13 @@ public class ListAppointments extends GUI.TabBase implements DocumentListener {
 
     @Override
     public void Load() {
+        super.Load();
         loadData();
-        loadTable();
+        formatTable();
     }
 
-    /**
-     * Load data into a table
-     */
-    private void loadTable() {
+    @Override
+    protected void formatTable() {
         ArrayList<String[]> values = new ArrayList<>();
         for (Appointment a : searchedAppointments) {
             values.add(new String[]{
@@ -73,35 +62,7 @@ public class ListAppointments extends GUI.TabBase implements DocumentListener {
             });
         }
 
-        _modelTable = new DefaultTableModel(values.toArray(new Object[][]{}), columns.toArray());
-        _table.setModel(_modelTable);
-        JUtilities.resizeColumnWidth(_table);
-        JUtilities.setCellsAlignment(_table, SwingConstants.CENTER);
-    }
-
-    /**
-     * Set columns
-     *
-     * @return
-     */
-    private ArrayList<String> loadColumns() {
-        ArrayList<String> c = new ArrayList<>() {{
-            add("Date");
-            add("Status");
-            add("Type");
-            add("Price");
-            add("Payment");
-            add("Payed");
-        }};
-        return c;
-    }
-
-    /**
-     * Load data
-     */
-    private void loadData() {
-        allAppointments = Appointment.recoverAppointments(Main.user.get_id());
-        searchedAppointments = allAppointments;
+        putValuesInTable(values);
     }
 
     /**
@@ -119,7 +80,7 @@ public class ListAppointments extends GUI.TabBase implements DocumentListener {
             }).collect(Collectors.toCollection(ArrayList::new));
         }
 
-        loadTable();
+        formatTable();
     }
 
     @Override

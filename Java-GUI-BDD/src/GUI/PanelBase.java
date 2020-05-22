@@ -19,7 +19,7 @@ public abstract class PanelBase extends JPanel implements ActionListener {
     public PanelBase() {
         super(new GridLayout(1, 1));
         tabbedPane = new JTabbedPane();
-        // tabbedPane.setPreferredSize(new Dimension(500,500));
+        //tabbedPane.setPreferredSize(new Dimension(500,500));
         add(tabbedPane);
     }
 

@@ -1,5 +1,6 @@
 package oo;
 
+import Project.Database.MariaDB;
 import Project.Database.Prepared;
 import Project.ItemComboBox;
 import Project.Pair;
@@ -22,8 +23,13 @@ public class Appointment {
     private Date appointmentTime;
     private double price;
     private String status;
+    private String email;
+    private String gesture;
+    private String keywords;
+    private String position;
+    private int anxiety;
 
-    public Appointment(int idAppointment, String payment, boolean payed, String type, Date appointmentTime, double price, String status) {
+    public Appointment(int idAppointment, String payment, boolean payed, String type, Date appointmentTime, double price, String status, String email, String gesture, String keywords, String position, int anxiety) {
         this.idAppointment = idAppointment;
         this.payment = payment;
         this.payed = payed;
@@ -31,6 +37,11 @@ public class Appointment {
         this.appointmentTime = appointmentTime;
         this.price = price;
         this.status = status;
+        this.email = email;
+        this.gesture = gesture;
+        this.keywords = keywords;
+        this.position = position;
+        this.anxiety = anxiety;
     }
 
     public int getIdAppointment() {
@@ -61,14 +72,72 @@ public class Appointment {
         return status;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setPayment(String payment) {
+        this.payment = payment;
+    }
+
+    public void setPayed(boolean payed) {
+        this.payed = payed;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getGesture() {
+        return gesture;
+    }
+
+    public void setGesture(String gesture) {
+        this.gesture = gesture;
+    }
+
+    public String getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public int getAnxiety() {
+        return anxiety;
+    }
+
+    public void setAnxiety(int anxiety) {
+        this.anxiety = anxiety;
+    }
+
     public static ArrayList<Appointment> recoverAppointments(int idUser) {
         ArrayList<Appointment> list = new ArrayList<>();
 
-        Prepared p = new Prepared("SELECT id_rdv, date_rdv, status, type_rdv, prix, paiement, payee " +
-                                    "FROM v_extended_appointment " +
-                                    "WHERE id_patient = ? " +
-                                    "ORDER BY date_rdv DESC");
-        p.setValue(1,idUser);
+        Prepared p;
+        if (idUser == -1) {
+            p = new Prepared("SELECT id_rdv, date_rdv, status, type_rdv, prix, paiement, payee, v_extended_appointment.id_patient, patient.email, gestuel, mots_cles, posture, anxiete " +
+                    "FROM v_extended_appointment " +
+                    "INNER JOIN patient ON v_extended_appointment.id_patient = patient.id_patient " +
+                    "ORDER BY date_rdv DESC");
+        } else {
+            p = new Prepared("SELECT id_rdv, date_rdv, status, type_rdv, prix, paiement, payee, v_extended_appointment.id_patient, patient.email, gestuel, mots_cles, posture, anxiete " +
+                    "FROM  v_extended_appointment " +
+                    "INNER JOIN patient ON v_extended_appointment.id_patient = patient.id_patient " +
+                    "WHERE v_extended_appointment.id_patient = ? " +
+                    "ORDER BY date_rdv DESC");
+            p.setValue(1, idUser);
+        }
+
 
         try {
             ResultSet r = p.executeQuery();
@@ -79,7 +148,13 @@ public class Appointment {
                                                 r.getString(4),
                                                 new Date(r.getTimestamp(2).getTime()),
                                                 r.getFloat(5),
-                                                r.getString(3));
+                        r.getString(3),
+                        r.getString(9),
+                        r.getString(10),
+                        r.getString(11),
+                        r.getString(12),
+                        r.getInt(13)
+                );
                 list.add(a);
             }
         } catch (SQLException e) {
@@ -210,6 +285,7 @@ public class Appointment {
         p.setValue(i++, new java.sql.Timestamp(appointmentTime.getTime()), Types.TIMESTAMP);
         p.setValue(i++, type_id);
         p.executeUpdate();
+        MariaDB.endQuery();
 
         // Getting appointment id
         p = new Prepared("SELECT @@IDENTITY");
@@ -226,5 +302,40 @@ public class Appointment {
             e.printStackTrace();
         }
         return -1;
+    }
+
+    /**
+     * Update an appointment in DB based on the local values
+     */
+    public void updateAppointment() {
+        Prepared p = new Prepared("UPDATE rdv SET status = ?, paiement = ?, payee = ? WHERE id_rdv = ?");
+
+        int i = 1;
+        p.setValue(i++, status);
+        p.setValue(i++, payment);
+        p.setValue(i++, payed);
+        p.setValue(i, idAppointment);
+
+        p.executeUpdate();
+        MariaDB.endQuery();
+    }
+
+    /**
+     * Update a consultation in DB based on the local values
+     */
+    public void updateConsultation() {
+        int idPatient = Patient.verifyUserMail(email);
+        Prepared p = new Prepared("UPDATE consultation SET gestuel = ?, mots_cles = ?, posture = ?, anxiete = ? WHERE id_rdv = ? AND id_patient = ?");
+
+        int i = 1;
+        p.setValue(i++, gesture);
+        p.setValue(i++, keywords);
+        p.setValue(i++, position);
+        p.setValue(i++, anxiety);
+        p.setValue(i++, idAppointment);
+        p.setValue(i, idPatient);
+
+        p.executeUpdate();
+        MariaDB.endQuery();
     }
 }
