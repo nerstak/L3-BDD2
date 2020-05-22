@@ -35,7 +35,7 @@ CREATE TABLE PATIENT (
   moyen VARCHAR(42),
   PRIMARY KEY (id_patient),
   UNIQUE(email),
-  CHECK(DATEDIFF(DATE(NOW()),dob) > 0)
+  CHECK(DATEDIFF(NOW(),dob) > 0)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE OR REPLACE TABLE TYPE_RDV (
@@ -49,9 +49,9 @@ CREATE OR REPLACE TABLE TYPE_RDV (
 CREATE TABLE RDV (
   id_rdv INT NOT NULL AUTO_INCREMENT,
   date_rdv DATETIME NOT NULL,
-  status VARCHAR(42) NOT NULL DEFAULT 'Planned',
+  status VARCHAR(42) NOT NULL,
   payee BOOLEAN NOT NULL DEFAULT false,
-  paiement VARCHAR(22) DEFAULT 'X',
+  paiement VARCHAR(22) DEFAULT '',
   id_type_rdv INT NOT NULL,
   PRIMARY KEY (id_rdv),
   FOREIGN KEY (id_type_rdv) REFERENCES TYPE_RDV (id_type_rdv) ON DELETE CASCADE
@@ -233,6 +233,30 @@ BEGIN
     IF((SELECT date_rdv FROM rdv WHERE date_rdv = NEW.date_rdv) != 0 OR numberAppointmentPlanned(NEW.date_rdv) >= 20) THEN
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible to insert value';
     end if;
+    IF(datediff(date(NOW()), NEW.date_rdv) < 0) THEN
+        SET NEW.status = 'Planned';
+    ELSE
+        SET NEW.status = 'Past';
+    end if;
+    IF(NEW.paiement != '') THEN
+        SET NEW.payee = true;
+    end if;
+END; |
+
+CREATE OR REPLACE TRIGGER trigg_rdv_check_update
+    BEFORE UPDATE ON rdv
+    FOR EACH ROW
+BEGIN
+    IF(NEW.status != 'Cancelled') THEN
+        IF(datediff(date(NOW()), NEW.date_rdv) < 0) THEN
+            SET NEW.status = 'Planned';
+        ELSE
+            SET NEW.status = 'Past';
+        end if;
+        IF(NEW.paiement != '') THEN
+            SET NEW.payee = true;
+        end if;
+    END IF;
 END; |
 
 CREATE OR REPLACE TRIGGER trigg_consultation_insert
@@ -271,7 +295,6 @@ GRANT SELECT ON rdvs.v_historique_job_complet TO therapist;
 GRANT SELECT ON rdvs.v_extended_appointment TO therapist;
 
 CREATE USER 'patient' IDENTIFIED BY 'patientPassword';
-GRANT SELECT ON rdvs.consultation TO patient;
 GRANT EXECUTE ON PROCEDURE new_job_patient TO patient;
 GRANT EXECUTE ON PROCEDURE check_dob TO patient;
 GRANT SELECT, INSERT ON rdvs.historique_job TO patient;
@@ -279,5 +302,6 @@ GRANT SELECT, INSERT ON rdvs.job TO patient;
 GRANT SELECT, UPDATE ON rdvs.patient TO patient;
 GRANT SELECT, UPDATE ON rdvs.rdv TO patient; -- CAN UPDATE IF WE INCLUDE MODIFICATION OF APPOINTMENTS
 GRANT SELECT ON rdvs.type_rdv TO patient;
+GRANT SELECT ON rdvs.consultation TO patient;
 GRANT SELECT ON rdvs.v_historique_job_complet TO patient;
 GRANT SELECT ON rdvs.v_extended_appointment TO patient;

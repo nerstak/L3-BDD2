@@ -67,6 +67,7 @@ public class tableAppointment extends GUI.TabBase {
 
         if (Main.user.getType().equals("Therapist")) {
             columns.add(2, "Mail");
+            columns.add(0, "ID");
         }
     }
 

@@ -6,18 +6,23 @@ import oo.Appointment;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-public class ListAppointments extends GUI.Common.tableAppointment implements DocumentListener, ActionListener {
-    private JTextField _searchFieldDate;
-    private JTextField _searchFieldMail;
+public class ListAppointments extends GUI.Common.tableAppointment implements DocumentListener, ActionListener, ListSelectionListener {
+    private JTextField _searchFieldDate, _searchFieldMail;
     private JComboBox _searchComboBoxStatus;
+    private JButton _payedButton, _cancelButton, _doneButton;
 
     private String[] _statusString = new String[]{"", "Planned", "Cancelled", "Past"};
+    private int rowAppointment = -1;
+    private Appointment selectedAppointment = null;
+    private boolean appointmentChanged = false;
 
     public ListAppointments() {
         SetElements();
@@ -50,11 +55,26 @@ public class ListAppointments extends GUI.Common.tableAppointment implements Doc
                 return false;
             }
         };
+        _table.getSelectionModel().addListSelectionListener(this);
         _table.getTableHeader().setReorderingAllowed(false);
 
         JScrollPane _tableScrollPane = new JScrollPane(_table);
         _tableScrollPane.setBorder(BorderFactory.createEmptyBorder());
         listComponents.add(_tableScrollPane);
+
+        _cancelButton = new JButton("Cancel");
+        _cancelButton.addActionListener(this);
+        listComponents.add(_cancelButton);
+
+        _doneButton = new JButton("Mark as done");
+        _doneButton.addActionListener(this);
+        listComponents.add(_doneButton);
+
+        _payedButton = new JButton("Mark as payed");
+        _payedButton.addActionListener(this);
+        listComponents.add(_payedButton);
+
+        setFieldsAvailability(false);
     }
 
     @Override
@@ -62,6 +82,7 @@ public class ListAppointments extends GUI.Common.tableAppointment implements Doc
         ArrayList<String[]> values = new ArrayList<>();
         for (Appointment a : searchedAppointments) {
             values.add(new String[]{
+                    String.valueOf(a.getIdAppointment()),
                     Utilities.appointmentFormat.format(a.getAppointmentTime()),
                     Utilities.capitalizeFirstLetter(a.getStatus()),
                     a.getEmail(),
@@ -82,6 +103,9 @@ public class ListAppointments extends GUI.Common.tableAppointment implements Doc
         formatTable();
     }
 
+    /**
+     * Function to search appointment
+     */
     private void search() {
         searchedAppointments = allAppointments;
         String dateQuery = _searchFieldDate.getText();
@@ -106,8 +130,35 @@ public class ListAppointments extends GUI.Common.tableAppointment implements Doc
             }).collect(Collectors.toCollection(ArrayList::new));
         }
 
-
         formatTable();
+    }
+
+    /**
+     * Display fields according to the status of the appointment
+     *
+     * @param a Appointment
+     */
+    private void displayFields(Appointment a) {
+        setFieldsAvailability(false);
+        if (!a.isPayed() && a.getStatus().equals("Past") && !a.isPayed()) {
+            _payedButton.setEnabled(true);
+        }
+
+        if (a.getStatus().equals("Planned")) {
+            _cancelButton.setEnabled(true);
+            _doneButton.setEnabled(true);
+        }
+    }
+
+    /**
+     * Change fields availability
+     *
+     * @param b Boolean of availability
+     */
+    private void setFieldsAvailability(boolean b) {
+        _payedButton.setEnabled(b);
+        _cancelButton.setEnabled(b);
+        _doneButton.setEnabled(b);
     }
 
     @Override
@@ -127,6 +178,53 @@ public class ListAppointments extends GUI.Common.tableAppointment implements Doc
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        search();
+        if (e.getSource() == _searchComboBoxStatus) {
+            // Combobox of search
+            search();
+        } else if (e.getSource() == _cancelButton) { // This and below: button to change value of appointment
+            if (selectedAppointment != null) {
+                appointmentChanged = true;
+                selectedAppointment.setStatus("Cancelled");
+            }
+        } else if (e.getSource() == _doneButton) {
+            if (selectedAppointment != null) {
+                appointmentChanged = true;
+                selectedAppointment.setStatus("Past");
+            }
+        } else if (e.getSource() == _payedButton) {
+            selectedAppointment.setPayment(JOptionPane.showInputDialog(this,
+                    "Mean of payment", "Mean of payment", JOptionPane.PLAIN_MESSAGE));
+            selectedAppointment.setPayed(true);
+            appointmentChanged = true;
+        }
+        updateAppointment();
+    }
+
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+        if (!_table.getSelectionModel().isSelectionEmpty()) {
+            rowAppointment = _table.getSelectionModel().getMinSelectionIndex();
+            int idAppointment = Integer.parseInt(String.valueOf(_table.getValueAt(rowAppointment, 0)));
+            selectedAppointment = searchedAppointments.stream().filter(c -> c.getIdAppointment() == idAppointment).findAny().orElse(null);
+
+            assert selectedAppointment != null;
+            displayFields(selectedAppointment);
+        } else {
+            selectedAppointment = null;
+            setFieldsAvailability(false);
+        }
+    }
+
+    /**
+     * Update an appointment
+     */
+    private void updateAppointment() {
+        if (appointmentChanged && selectedAppointment != null) {
+            selectedAppointment.updateAppointment();
+            appointmentChanged = false;
+            loadData();
+            search();
+            _table.setRowSelectionInterval(rowAppointment, rowAppointment);
+        }
     }
 }

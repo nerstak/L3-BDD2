@@ -1,5 +1,6 @@
 package oo;
 
+import Project.Database.MariaDB;
 import Project.Database.Prepared;
 import Project.ItemComboBox;
 import Project.Pair;
@@ -65,6 +66,18 @@ public class Appointment {
 
     public String getEmail() {
         return email;
+    }
+
+    public void setPayment(String payment) {
+        this.payment = payment;
+    }
+
+    public void setPayed(boolean payed) {
+        this.payed = payed;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public static ArrayList<Appointment> recoverAppointments(int idUser) {
@@ -227,6 +240,7 @@ public class Appointment {
         p.setValue(i++, new java.sql.Timestamp(appointmentTime.getTime()), Types.TIMESTAMP);
         p.setValue(i++, type_id);
         p.executeUpdate();
+        MariaDB.endQuery();
 
         // Getting appointment id
         p = new Prepared("SELECT @@IDENTITY");
@@ -243,5 +257,21 @@ public class Appointment {
             e.printStackTrace();
         }
         return -1;
+    }
+
+    /**
+     * Update an appointment in DB based on the local values
+     */
+    public void updateAppointment() {
+        Prepared p = new Prepared("UPDATE rdv SET status = ?, paiement = ?, payee = ? WHERE id_rdv = ?");
+
+        int i = 1;
+        p.setValue(i++, status);
+        p.setValue(i++, payment);
+        p.setValue(i++, payed);
+        p.setValue(i, idAppointment);
+
+        p.executeUpdate();
+        MariaDB.endQuery();
     }
 }
