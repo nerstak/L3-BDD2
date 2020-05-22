@@ -1,7 +1,6 @@
 package GUI.Tab.Therapist;
 
 import GUI.TabBase;
-import Project.Database.Prepared;
 import Project.Main;
 import Project.MariaDB;
 import oo.Patient;
@@ -87,18 +86,21 @@ public class SeePatient<T extends Therapist> extends TabBase implements ListSele
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        /** if(!_table.getSelectionModel().isSelectionEmpty())
+        if(!_table.getSelectionModel().isSelectionEmpty())
         {
             _selectedRow = _table.getSelectionModel().getMinSelectionIndex();
             Integer IDPatient = 0;
 
             try {
-                Prepared p = new Prepared("SELECT id_patient FROM patient WHERE prenom = ? AND nom = ? AND email = ?;");
-                p.setValue(1, (String) _table.getValueAt(_selectedRow, 0));     // set the firstname
-                p.setValue(2, (String) _table.getValueAt(_selectedRow, 1));     // set the lastname
-                p.setValue(3, (String) _table.getValueAt(_selectedRow, 2));     // set the mail
+                MariaDB m = new MariaDB("SELECT id_patient FROM patient WHERE prenom = ? AND nom = ? AND email = ? AND dob = ? AND categorie = ? AND moyen = ?;");
+                m.setValue(1, (String) _table.getValueAt(_selectedRow, 0));     // set the firstname
+                m.setValue(2, (String) _table.getValueAt(_selectedRow, 1));     // set the lastname
+                m.setValue(3, (String) _table.getValueAt(_selectedRow, 2));     // set the mail
+                m.setValue(4, (String) _table.getValueAt(_selectedRow, 3));     // set the dob
+                m.setValue(5, (String) _table.getValueAt(_selectedRow, 4));     // set the categorie
+                m.setValue(6, (String) _table.getValueAt(_selectedRow, 5));     // set the moyen
 
-                ResultSet rs = p.executeQuery();
+                ResultSet rs = m.executeQuery();
                 if(rs.next())
                 {
                     IDPatient = rs.getInt(1);           // get the ID of the patient
@@ -111,7 +113,7 @@ public class SeePatient<T extends Therapist> extends TabBase implements ListSele
             catch (SQLException f) {
                 System.err.format("\nSQL State: %s\n%s", f.getSQLState(), f.getMessage());
             }
-        } **/
+        }
     }
 
     @Override
@@ -130,10 +132,11 @@ public class SeePatient<T extends Therapist> extends TabBase implements ListSele
     }
 
     /**
-     * Load the correct window of the patient that replaces the actual one (it's horrible to look at, we'll have to do it in a better way I think)
+     * Load the correct window of the patient, which replaces the actual one (it's horrible to look at, we'll have to do it in a better way I think)
      */
     private void loadWindow() {
-        Main.therapistWindow.dispose();
-        Main.therapistWindow.Load();
+        Main.disposeAllWindows();
+        setVisible(false);
+        Main.patientWindow.Load();
     }
 }
