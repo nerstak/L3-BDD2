@@ -102,8 +102,10 @@ public class NewAppointment extends GUI.TabBase implements ActionListener {
         _yearComboBox = new JComboBox(Utilities.listNbToString(_actualDate.getYear(), _actualDate.getYear() + 5));
         _datePanel.add(_yearComboBox);
         _monthComboBox = new JComboBox(Utilities.listNbToString(1, 12));
+        _monthComboBox.setSelectedIndex(_actualDate.getMonthValue() - 1);
         _datePanel.add(_monthComboBox);
         _dayComboBox = new JComboBox(Utilities.listNbToString(1, 31));
+        _dayComboBox.setSelectedIndex(_actualDate.getDayOfMonth() - 1);
         _datePanel.add(_dayComboBox);
         listComponents.add(_datePanel);
     }

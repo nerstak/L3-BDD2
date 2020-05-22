@@ -196,7 +196,7 @@ FUNCTION numberAppointmentPlanned(dayTime datetime) RETURNS INT
 BEGIN
     DECLARE v_day DATE;
     SELECT DATE(dayTime) INTO v_day;
-    RETURN (SELECT COUNT(id_rdv) FROM rdv WHERE DATE(date_rdv) = v_day AND status = 'Planned');
+    RETURN (SELECT COUNT(id_rdv) FROM rdv WHERE DATE(date_rdv) = v_day AND status != 'Cancelled');
 end; |
 DELIMITER ;
 
@@ -230,7 +230,7 @@ CREATE OR REPLACE TRIGGER trigg_rdv_check_insert
     BEFORE INSERT ON rdv
     FOR EACH ROW
 BEGIN
-    IF((SELECT date_rdv FROM rdv WHERE date_rdv = NEW.date_rdv) != 0 OR numberAppointmentPlanned(NEW.date_rdv) >= 20) THEN
+    IF((SELECT date_rdv FROM rdv WHERE date_rdv = NEW.date_rdv AND status != 'Cancelled') != 0 OR numberAppointmentPlanned(NEW.date_rdv) >= 20) THEN
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible to insert value';
     end if;
     IF(datediff(date(NOW()), NEW.date_rdv) < 0) THEN

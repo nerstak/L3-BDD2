@@ -90,9 +90,6 @@ public class Patient extends User {
         } catch (Exception e) {
             return "date of birth";
         }
-        if(_job.isEmpty()) {
-            return "job";
-        }
         if(password.isEmpty()) {
             return "password";
         }
@@ -157,10 +154,6 @@ public class Patient extends User {
         email = email.replaceAll("\\s+", ""); // Remove white spaces
         if (!Utilities.isValidMail(email)) {
             return "Mail Address";
-        }
-        if(job.isEmpty())
-        {
-            return "Job";
         }
         try {
             dob = new SimpleDateFormat("yyyy-MM-dd").parse(dobString);

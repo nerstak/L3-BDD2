@@ -25,6 +25,8 @@ public class Edit extends GUI.Common.accountEdition implements ActionListener {
         _updateButton = new JButton("Update");
         _updateButton.addActionListener(this);
         listComponents.add(_updateButton);
+
+        fieldsAvailability(false);
     }
 
     public Edit() {
@@ -43,6 +45,11 @@ public class Edit extends GUI.Common.accountEdition implements ActionListener {
         _relationComboBox.setSelectedIndex(u.get_relation() ? 1 : 0);
         _jobField.setText(u.get_job());
         _addressField.setText(u.get_address());
+    }
+
+    private void fieldsAvailability(Boolean b) {
+        _lastNameField.setEditable(b);
+        _firstNameField.setEditable(b);
     }
 
     @Override
