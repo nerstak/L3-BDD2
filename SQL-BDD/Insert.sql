@@ -37,7 +37,7 @@ INSERT INTO historique_job(id_patient, id_job, date_debut, date_fin) VALUES
 (3, 11, '2019-06-01', '2019-08-31'),
 (4, 3, '1999-03-18', DATE(NOW()));
 
-INSERT INTO consultation(id_rdv, id_patient, posture, gestuel, mots_clés, anxiete) VALUES
+INSERT INTO consultation(id_rdv, id_patient, posture, gestuel, mots_cles, anxiete) VALUES
 (1, 1, 'Ne se tient pas droit', NULL, 'pas droit', 5),
 (2, 2, 'Ne se tient pas droit', 'regarde dans le vide, semble detruit interieurement', 'las', 5),
 (3, 4, NULL, 'Bouge les mains sans cesse, ne fait que parler', 'surexitee', 7),

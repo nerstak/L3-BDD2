@@ -320,9 +320,12 @@ public class Appointment {
         MariaDB.endQuery();
     }
 
+    /**
+     * Update a consultation in DB based on the local values
+     */
     public void updateConsultation() {
         int idPatient = Patient.verifyUserMail(email);
-        Prepared p = new Prepared("UPDATE consultation SET gestuel = ?, mots_cles = ?, posture = ?, anxiete WHERE id_rdv = ? AND id_patient = ?");
+        Prepared p = new Prepared("UPDATE consultation SET gestuel = ?, mots_cles = ?, posture = ?, anxiete = ? WHERE id_rdv = ? AND id_patient = ?");
 
         int i = 1;
         p.setValue(i++, gesture);

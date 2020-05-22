@@ -49,7 +49,7 @@ CREATE OR REPLACE TABLE TYPE_RDV (
 CREATE TABLE RDV (
   id_rdv INT NOT NULL AUTO_INCREMENT,
   date_rdv DATETIME NOT NULL,
-  status VARCHAR(42) NOT NULL,
+  status VARCHAR(42) NOT NULL DEFAULT 'Planned',
   payee BOOLEAN NOT NULL DEFAULT false,
   paiement VARCHAR(22) DEFAULT '',
   id_type_rdv INT NOT NULL,
@@ -73,7 +73,7 @@ CREATE OR REPLACE TABLE CONSULTATION (
   id_rdv INT NOT NULL,
   posture VARCHAR(200),
   gestuel VARCHAR(200),
-  mots_clés VARCHAR(200),
+  mots_cles VARCHAR(200),
   anxiete INT,
   PRIMARY KEY (id_patient, id_rdv),
   FOREIGN KEY (id_rdv) REFERENCES RDV (id_rdv) ON DELETE CASCADE,
@@ -93,7 +93,7 @@ ON historique_job.id_job = job.id_job;
 CREATE OR REPLACE DEFINER = CURRENT_USER
 VIEW V_extended_appointment
     AS
-    SELECT rdv.id_rdv, date_rdv, status, rdv.payee, rdv.paiement, type_rdv.type_rdv, type_rdv.prix, id_patient
+    SELECT rdv.id_rdv, date_rdv, status, rdv.payee, rdv.paiement, type_rdv.type_rdv, type_rdv.prix, id_patient, gestuel, mots_cles, posture,anxiete
     FROM consultation
         INNER JOIN rdv
         ON rdv.id_rdv = consultation.id_rdv

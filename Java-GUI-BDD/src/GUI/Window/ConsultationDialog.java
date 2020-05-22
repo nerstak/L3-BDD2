@@ -1,13 +1,17 @@
 package GUI.Window;
 
+import Project.Utilities;
 import oo.Appointment;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class ConsultationDialog extends JDialog {
+public class ConsultationDialog extends JDialog implements ActionListener {
     private JTextArea gestureTextArea, keywordsTextArea, positionTextArea;
     private JButton confirmButton;
+    private JComboBox anxietyComboBox;
 
     private GridBagConstraints gbc;
     private Appointment appointment;
@@ -29,7 +33,7 @@ public class ConsultationDialog extends JDialog {
         getContentPane().setLayout(new GridBagLayout());
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        setBackground(Color.LIGHT_GRAY);
+        getContentPane().setBackground(Color.LIGHT_GRAY);
 
         gbc.gridy = 0;
         gbc.gridx = 0;
@@ -52,8 +56,16 @@ public class ConsultationDialog extends JDialog {
         gbc.gridx = 1;
         this.add(positionTextArea, gbc);
 
-        gbc.gridy += 2;
+        gbc.gridy++;
+        gbc.gridx = 0;
+        this.add(new JLabel("Anxiety: "), gbc);
+        anxietyComboBox = new JComboBox(Utilities.listNbToString(0, 10));
+        gbc.gridx = 1;
+        this.add(anxietyComboBox, gbc);
+
+        gbc.gridy++;
         confirmButton = new JButton("Confirm");
+        confirmButton.addActionListener(this);
         this.add(confirmButton, gbc);
 
         lineWrapTextArea(true);
@@ -70,5 +82,20 @@ public class ConsultationDialog extends JDialog {
         gestureTextArea.setText(appointment.getGesture());
         keywordsTextArea.setText(appointment.getKeywords());
         positionTextArea.setText(appointment.getPosition());
+
+        anxietyComboBox.setSelectedIndex(appointment.getAnxiety());
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == confirmButton) {
+            appointment.setGesture(gestureTextArea.getText());
+            appointment.setKeywords(keywordsTextArea.getText());
+            appointment.setPosition(positionTextArea.getText());
+            appointment.setAnxiety(Integer.parseInt((String) anxietyComboBox.getSelectedItem()));
+
+            appointment.updateConsultation();
+            dispose();
+        }
     }
 }
