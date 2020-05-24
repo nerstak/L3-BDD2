@@ -26,10 +26,29 @@ INSERT INTO type_rdv(type_rdv, prix) VALUES
 INSERT INTO rdv(id_type_rdv, date_rdv, paiement) VALUES
 (1, '2020-04-17 14:00:00', 'Carte-Bleue'),
 (2, '2019-08-17 14:30:00', 'Espece'),
-(3, '2020-01-05 08:00:00', ''),
+(3, '2020-01-05 08:00:00', 'Chèque'),
 (3, '2020-09-30 12:00:00', ''),
 (2, '2021-12-16 16:30:00', ''),
-(3, '2020-09-30 10:00:00', '');
+(3, '2020-09-30 10:00:00', ''),
+(3, '2020-09-30 09:00:00', ''),
+(2, '2020-09-30 08:30:00', ''),
+(3, '2020-09-30 09:30:00', ''),
+(1, '2020-09-30 10:30:00', ''),
+(1, '2020-09-30 11:00:00', ''),
+(2, '2020-09-30 12:30:00', ''),
+(2, '2020-09-30 13:00:00', ''),
+(2, '2020-09-30 14:00:00', ''),
+(2, '2020-09-30 14:30:00', ''),
+(2, '2020-09-30 15:00:00', ''),
+(2, '2020-09-30 15:30:00', ''),
+(2, '2020-09-30 16:00:00', ''),
+(2, '2020-09-30 16:30:00', ''),
+(2, '2020-09-30 17:00:00', ''),
+(2, '2020-09-30 17:30:00', ''),
+(3, '2020-09-30 08:00:00', ''),
+(1, '2020-10-05 08:00:00', '');
+
+UPDATE rdv SET status = 'Cancelled' WHERE id_rdv = 22;
 
 INSERT INTO historique_job(id_patient, id_job, date_debut, date_fin) VALUES
 (1, 11, '2019-06-01', '2019-08-31'),
@@ -44,7 +63,25 @@ INSERT INTO consultation(id_rdv, id_patient, posture, gestuel, mots_cles, anxiet
 (4,5,NULL,NULL,NULL,NULL),
 (4,3,NULL,NULL,NULL,NULL),
 (5,4,NULL,NULL,NULL,NULL),
-(6,2,NULL,NULL,NULL,NULL);
+(6,2,NULL,NULL,NULL,NULL),
+(7,4,NULL,NULL,NULL,NULL),
+(7,5,NULL,NULL,NULL,NULL),
+(8,4,NULL,NULL,NULL,NULL),
+(9,3,NULL,NULL,NULL,NULL),
+(11,1,NULL,NULL,NULL,NULL),
+(11,2,NULL,NULL,NULL,NULL),
+(12,1,NULL,NULL,NULL,NULL),
+(13,1,NULL,NULL,NULL,NULL),
+(14,1,NULL,NULL,NULL,NULL),
+(15,5,NULL,NULL,NULL,NULL),
+(16,4,NULL,NULL,NULL,NULL),
+(17,3,NULL,NULL,NULL,NULL),
+(18,2,NULL,NULL,NULL,NULL),
+(19,4,NULL,NULL,NULL,NULL),
+(20,2,NULL,NULL,NULL,NULL),
+(21,5,NULL,NULL,NULL,NULL),
+(21,1,NULL,NULL,NULL,NULL),
+(22,4,NULL,NULL,NULL,NULL);
 
 INSERT INTO therapist(name, password) VALUES
 ('admin','admin');
