@@ -46,7 +46,7 @@ public class Patient extends User {
 
 
         // Selecting job
-        m = new Prepared("SELECT nom FROM V_historique_job_complet" +
+        m = new Prepared("SELECT nom FROM v_historique_job_complet" +
                 " WHERE id_patient = ? AND id_historique_job = (" +
                 "       SELECT MAX(id_historique_job)" +
                 "       FROM historique_job " +
@@ -113,7 +113,7 @@ public class Patient extends User {
 
         c.executeUpdate();
 
-        Boolean result = c.getBoolean(index);
+        boolean result = c.getBoolean(index);
         if (result && MariaDB.endQuery()) {
             return "";
         } else {
@@ -175,7 +175,7 @@ public class Patient extends User {
             m = new Prepared("UPDATE patient SET nom = ?, prenom = ?, email = ?, dob = ?, couple = ?, adresse = ?, password = ? WHERE id_patient = ?");
         }
         
-        Integer index = 1;
+        int index = 1;
         m.setValue(index++, lastName);
         m.setValue(index++, firstName);
         m.setValue(index++, email);

@@ -14,7 +14,7 @@ public class ConsultationDialog extends JDialog implements ActionListener {
     private JComboBox anxietyComboBox;
 
     private GridBagConstraints gbc;
-    private Appointment appointment;
+    private final Appointment appointment;
 
     public ConsultationDialog(Appointment a) {
         this.appointment = a;

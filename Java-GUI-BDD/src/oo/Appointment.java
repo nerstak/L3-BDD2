@@ -16,14 +16,14 @@ import java.util.Date;
 import java.util.Vector;
 
 public class Appointment {
-    private int idAppointment;
+    private final int idAppointment;
     private String payment;
     private boolean payed;
-    private String type;
-    private Date appointmentTime;
-    private double price;
+    private final String type;
+    private final Date appointmentTime;
+    private final double price;
     private String status;
-    private String email;
+    private final String email;
     private String gesture;
     private String keywords;
     private String position;

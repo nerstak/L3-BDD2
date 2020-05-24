@@ -82,7 +82,7 @@ public class Login<T extends User> extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == loginButton) {
-            Boolean error = false;
+            boolean error = false;
             Integer id = User.verifyUserMail(mailField.getText()); // Getting id of patient corresponding to mail
             if(id != -1) {
                 // Patient

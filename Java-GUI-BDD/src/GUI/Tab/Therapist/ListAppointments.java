@@ -22,7 +22,7 @@ public class ListAppointments extends GUI.Common.tableAppointment implements Doc
     private JComboBox _searchComboBoxStatus;
     private JButton _payedButton, _cancelButton, _doneButton;
 
-    private String[] _statusString = new String[]{"", "Planned", "Cancelled", "Past"};
+    private final String[] _statusString = new String[]{"", "Planned", "Cancelled", "Past"};
     private int rowAppointment = -1;
     private Appointment selectedAppointment = null;
     private boolean appointmentChanged = false;

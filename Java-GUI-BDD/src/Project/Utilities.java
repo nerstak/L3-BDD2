@@ -2,70 +2,12 @@ package Project;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.util.Arrays;
 
 /**
  * Class that holds different functions that are too general too be implemented in a specific class
  */
 public class Utilities {
-    public static final DateFormat appointmentFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm");
-
-    /**
-     * Convert an object into a string of length by adding '0' at beginning
-     *
-     * @param n      Object to convert
-     * @param length Integer Length desired for string
-     * @return String
-     */
-    public static String convertIntDateToString(Object n, Integer length) {
-        StringBuilder s = new StringBuilder(n.toString());
-        while (s.length() < length) {
-            s.insert(0, "0");
-        }
-        return s.toString();
-    }
-
-    /**
-     * Verify if a date is valid
-     *
-     * @param year  Integer Year (4 digits)
-     * @param month Integer Month number
-     * @param day   Integer Day
-     * @return Validity of date
-     */
-    public static boolean verifyDate(Integer year, Integer month, Integer day) {
-        Integer[] longMonth = {1, 3, 5, 7, 8, 10, 12};
-
-        if (day > 31 || day < 1 || month < 1 || month > 12) {
-            return false;
-        }
-
-        if (Arrays.asList(longMonth).contains(month)) {
-            return true;
-        } else if (month == 2) {
-            if (year % 4 == 0 && year % 100 != 0 || year % 400 == 0) {
-                if (day <= 29) {
-                    return true;
-                }
-            }
-            return day <= 28;
-        } else return day <= 30;
-
-    }
-
-    /**
-     * Check if two period are overlapping
-     *
-     * @param start1 LocalDateTime Start of period 1
-     * @param end1   LocalDateTime End of period 1
-     * @param start2 LocalDateTime Start of period 2
-     * @param end2   LocalDateTime End of period 2
-     * @return boolean true if period are overlapping
-     */
-    public static boolean isOverlapping(LocalDateTime start1, LocalDateTime end1, LocalDateTime start2, LocalDateTime end2) {
-        return start1.isBefore(end2) && start2.isBefore(end1);
-    }
+    public static final DateFormat appointmentFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
     /**
      * Set an array of string from a number to another
@@ -80,33 +22,6 @@ public class Utilities {
             y[i] = String.valueOf(i + b);
         }
         return y;
-    }
-
-    /**
-     * Check if a string is a numeric value
-     *
-     * @param strNum String to check
-     * @return boolean
-     */
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public static boolean isNumeric(String strNum) {
-        return strNum.matches("-?\\d+(\\.\\d+)?");
-    }
-
-    /**
-     * Round double
-     *
-     * @param value  Double to round
-     * @param places Integer Number of decimal
-     * @return Double rounded
-     */
-    public static double round(double value, int places) {
-        if (places < 0) throw new IllegalArgumentException();
-
-        long factor = (long) Math.pow(10, places);
-        value = value * factor;
-        long tmp = Math.round(value);
-        return (double) tmp / factor;
     }
 
     /**

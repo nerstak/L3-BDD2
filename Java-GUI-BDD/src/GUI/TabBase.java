@@ -5,7 +5,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public abstract class TabBase extends JPanel {
-    private GridBagConstraints gbc;
+    private final GridBagConstraints gbc;
     protected ArrayList<JComponent> listComponents;
 
     public TabBase() {
@@ -36,7 +36,7 @@ public abstract class TabBase extends JPanel {
      * @param modulo int Number of columns
      */
     protected void DisplayElements(Integer modulo) {
-        for (Integer i = 0; i < listComponents.size(); i++) {
+        for (int i = 0; i < listComponents.size(); i++) {
             gbc.gridx = i % modulo;
             gbc.gridy = i / modulo;
             this.add(listComponents.get(i), gbc);

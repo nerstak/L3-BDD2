@@ -1,20 +1,14 @@
 package GUI.Tab.Therapist;
 
 import GUI.TabBase;
-import Project.Database.Prepared;
 import Project.Main;
-import Project.MariaDB;
-import oo.Patient;
 import GUI.Window.Therapist;
-import oo.User;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class SeePatient<T extends Therapist> extends TabBase implements ListSelectionListener, DocumentListener
 {

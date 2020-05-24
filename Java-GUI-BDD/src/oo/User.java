@@ -35,7 +35,7 @@ public class User {
     public static Integer verifyUserMail(String mail)
     {
         mail = mail.replaceAll("\\s+", "");
-        Integer value = -1;
+        int value = -1;
 
         if (Utilities.isValidMail(mail)) {
             Prepared m = new Prepared("SELECT id_patient FROM patient WHERE email=?");
@@ -66,7 +66,7 @@ public class User {
 
     public static Integer verifyUserCredentials(String type, String mail, String password) {
         // TODO: Hash passwords
-        Integer value = -1;
+        int value = -1;
         if(type.equals("Patient")) {
             // Verify patient credential
             if (Utilities.isValidMail(mail)) {

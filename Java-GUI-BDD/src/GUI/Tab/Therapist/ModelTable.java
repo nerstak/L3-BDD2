@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public class ModelTable extends AbstractTableModel {
 
 
-    private static String[] _columnPatient = {"Prénom", "Nom", "Email", "DOB", "Categorie", "Moyen"};
+    private static final String[] _columnPatient = {"Prénom", "Nom", "Email", "DOB", "Categorie", "Moyen"};
 
 
     public static String[] getColumnPatient(){
