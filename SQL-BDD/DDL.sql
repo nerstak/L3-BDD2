@@ -1,6 +1,6 @@
 drop database IF EXISTS rdvs;
-CREATE DATABASE IF NOT EXISTS RDVS DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE RDVS;
+CREATE DATABASE IF NOT EXISTS rdvs DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE rdvs;
 
 DROP USER IF EXISTS login;
 DROP USER IF EXISTS therapist;
@@ -9,20 +9,20 @@ DROP USER IF EXISTS patient;
 
 -- Creation of tables
 
-CREATE TABLE THERAPIST (
+CREATE TABLE therapist (
     name VARCHAR(42) NOT NULL,
     password VARCHAR(200) NOT NULL,
     PRIMARY KEY (name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE JOB (
+CREATE TABLE job (
   id_job INT NOT NULL AUTO_INCREMENT,
   nom VARCHAR(42) NOT NULL,
   PRIMARY KEY (id_job),
   UNIQUE(nom) -- No duplication
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE PATIENT (
+CREATE TABLE patient (
   id_patient INT NOT NULL AUTO_INCREMENT,
   nom VARCHAR(42) NOT NULL,
   prenom VARCHAR(42) NOT NULL,
@@ -38,7 +38,7 @@ CREATE TABLE PATIENT (
   CHECK(DATEDIFF(NOW(),dob) > 0)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE OR REPLACE TABLE TYPE_RDV (
+CREATE OR REPLACE TABLE type_rdv (
   id_type_rdv INT NOT NULL AUTO_INCREMENT,
   type_rdv VARCHAR(42) NOT NULL,
   prix FLOAT NOT NULL,
@@ -46,7 +46,7 @@ CREATE OR REPLACE TABLE TYPE_RDV (
   UNIQUE(type_rdv)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE RDV (
+CREATE TABLE rdv (
   id_rdv INT NOT NULL AUTO_INCREMENT,
   date_rdv DATETIME NOT NULL,
   status VARCHAR(42) NOT NULL DEFAULT 'Planned',
@@ -54,21 +54,21 @@ CREATE TABLE RDV (
   paiement VARCHAR(22) DEFAULT '',
   id_type_rdv INT NOT NULL,
   PRIMARY KEY (id_rdv),
-  FOREIGN KEY (id_type_rdv) REFERENCES TYPE_RDV (id_type_rdv) ON DELETE CASCADE
+  FOREIGN KEY (id_type_rdv) REFERENCES type_rdv (id_type_rdv) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE HISTORIQUE_JOB (
+CREATE TABLE historique_job (
   id_historique_job INT NOT NULL AUTO_INCREMENT,
   id_patient INT NOT NULL,
   id_job INT NOT NULL,
   date_debut DATE NOT NULL DEFAULT NOW(),
   date_fin DATE,
   PRIMARY KEY (id_historique_job),
-  FOREIGN KEY (id_job) REFERENCES JOB (id_job) ON DELETE CASCADE,
-  FOREIGN KEY (id_patient) REFERENCES PATIENT (id_patient) ON DELETE CASCADE
+  FOREIGN KEY (id_job) REFERENCES job (id_job) ON DELETE CASCADE,
+  FOREIGN KEY (id_patient) REFERENCES patient (id_patient) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE OR REPLACE TABLE CONSULTATION (
+CREATE OR REPLACE TABLE consultation (
   id_patient INT NOT NULL,
   id_rdv INT NOT NULL,
   posture VARCHAR(200),
@@ -76,22 +76,22 @@ CREATE OR REPLACE TABLE CONSULTATION (
   mots_cles VARCHAR(200),
   anxiete INT,
   PRIMARY KEY (id_patient, id_rdv),
-  FOREIGN KEY (id_rdv) REFERENCES RDV (id_rdv) ON DELETE CASCADE,
-  FOREIGN KEY (id_patient) REFERENCES PATIENT (id_patient) ON DELETE CASCADE,
+  FOREIGN KEY (id_rdv) REFERENCES rdv (id_rdv) ON DELETE CASCADE,
+  FOREIGN KEY (id_patient) REFERENCES patient (id_patient) ON DELETE CASCADE,
   check(anxiete >= 0 and anxiete <= 10) -- Range of value
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 -- Creation of views
 CREATE OR REPLACE DEFINER = CURRENT_USER
-VIEW V_historique_job_complet
+VIEW v_historique_job_complet
     AS SELECT id_historique_job, nom, id_patient, date_debut, date_fin
     FROM job
 INNER JOIN historique_job 
 ON historique_job.id_job = job.id_job;
 
 CREATE OR REPLACE DEFINER = CURRENT_USER
-VIEW V_extended_appointment
+VIEW v_extended_appointment
     AS
     SELECT rdv.id_rdv, date_rdv, status, rdv.payee, rdv.paiement, type_rdv.type_rdv, type_rdv.prix, id_patient, gestuel, mots_cles, posture,anxiete
     FROM consultation
@@ -123,7 +123,7 @@ BEGIN
 
 
 	SELECT MAX(id_historique_job) INTO v_actual_job FROM historique_job WHERE id_patient = patient_id; -- Selecting most recent job
-	SELECT nom INTO v_actual_name_job FROM V_historique_job_complet WHERE id_historique_job = v_actual_job; -- Selecting its name
+	SELECT nom INTO v_actual_name_job FROM v_historique_job_complet WHERE id_historique_job = v_actual_job; -- Selecting its name
 	
 	IF(v_actual_job IS NULL OR v_actual_name_job != job_name) THEN -- Checking if the has changed
 	    IF(v_actual_job IS NOT NULL) THEN
@@ -196,7 +196,7 @@ FUNCTION numberAppointmentPlanned(dayTime datetime) RETURNS INT
 BEGIN
     DECLARE v_day DATE;
     SELECT DATE(dayTime) INTO v_day;
-    RETURN (SELECT COUNT(id_rdv) FROM rdv WHERE DATE(date_rdv) = v_day AND status = 'Planned');
+    RETURN (SELECT COUNT(id_rdv) FROM rdv WHERE DATE(date_rdv) = v_day AND status != 'Cancelled');
 end; |
 DELIMITER ;
 
@@ -230,7 +230,7 @@ CREATE OR REPLACE TRIGGER trigg_rdv_check_insert
     BEFORE INSERT ON rdv
     FOR EACH ROW
 BEGIN
-    IF((SELECT date_rdv FROM rdv WHERE date_rdv = NEW.date_rdv) != 0 OR numberAppointmentPlanned(NEW.date_rdv) >= 20) THEN
+    IF((SELECT date_rdv FROM rdv WHERE date_rdv = NEW.date_rdv AND status != 'Cancelled') != 0 OR numberAppointmentPlanned(NEW.date_rdv) >= 20) THEN
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible to insert value';
     end if;
     IF(datediff(date(NOW()), NEW.date_rdv) < 0) THEN
