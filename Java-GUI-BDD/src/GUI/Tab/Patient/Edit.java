@@ -49,12 +49,12 @@ public class Edit extends GUI.Common.accountEdition implements ActionListener {
 
     /**
      * Change field availability
-     *
      * @param b Boolean
      */
     private void fieldsAvailability(Boolean b) {
         _lastNameField.setEditable(b);
         _firstNameField.setEditable(b);
+        _dobField.setEditable(b);
     }
 
     @Override
