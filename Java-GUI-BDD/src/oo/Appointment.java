@@ -187,15 +187,29 @@ public class Appointment {
     }
 
 
+    /**
+     * Create an appointment in the database
+     *
+     * @param patient1
+     * @param patient2
+     * @param patient3
+     * @param type_id
+     * @param datetime
+     * @return
+     */
     public static Pair<Boolean, String> createAppointment(String patient1, String patient2, String patient3, Integer type_id, String datetime) {
+        // Verify values
         Pair<Boolean, String> result = checkValuesAppointment(patient1, patient2, patient3, type_id, datetime);
         if (result.getA()) {
+            // Insert in database
             int idAppointment = insertAppointment(type_id, datetime);
 
-            if(idAppointment > 0) {
+            if (idAppointment > 0) {
+                // Checking which patient to link the appointment to
                 int idPatient1 = User.verifyUserMail(patient1);
                 int idPatient2 = User.verifyUserMail(patient2);
                 int idPatient3 = User.verifyUserMail(patient3);
+
                 if(idPatient1 != -1) {
                     Consultation.createConsultation(idPatient1,idAppointment);
                 }
@@ -243,6 +257,12 @@ public class Appointment {
             result.setB("fields incorrectly filled");
         }
 
+        // Cannot add several time the same patient
+        if (idPatient1 == idPatient2 || idPatient1 == idPatient3 || (idPatient2 != -1 && idPatient2 == idPatient3)) {
+            result.setB("cannot select same patient");
+        }
+
+        // Checking date
         try {
             appointmentTime = new SimpleDateFormat("yyyy-MM-dd HH'h'mm").parse(datetime);
         } catch (Exception e) {
@@ -250,6 +270,7 @@ public class Appointment {
             return result;
         }
 
+        // Checking date
         if (appointmentTime.before(new Date())) {
             result.setB("impossible date");
         }
@@ -270,8 +291,8 @@ public class Appointment {
      * @return Appointment ID
      */
     private static Integer insertAppointment(Integer type_id, String datetime) {
+        // Formatting date
         Date appointmentTime;
-
         try {
             appointmentTime = new SimpleDateFormat("yyyy-MM-dd HH'h'mm").parse(datetime);
         } catch (ParseException e) {
@@ -283,7 +304,7 @@ public class Appointment {
         Prepared p = new Prepared("INSERT INTO rdv(date_rdv, id_type_rdv) VALUES (?,?)");
         int i = 1;
         p.setValue(i++, new java.sql.Timestamp(appointmentTime.getTime()), Types.TIMESTAMP);
-        p.setValue(i++, type_id);
+        p.setValue(i, type_id);
         p.executeUpdate();
         MariaDB.endQuery();
 
