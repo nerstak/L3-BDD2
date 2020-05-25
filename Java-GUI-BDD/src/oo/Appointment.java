@@ -199,7 +199,7 @@ public class Appointment {
      */
     public static Pair<Boolean, String> createAppointment(String patient1, String patient2, String patient3, Integer type_id, String datetime) {
         // Verify values
-        Pair<Boolean, String> result = checkValuesAppointment(patient1, patient2, patient3, type_id, datetime);
+        Pair<Boolean, String> result = checkValuesAppointment(patient1, patient2, patient3, datetime);
         if (result.getA()) {
             // Insert in database
             int idAppointment = insertAppointment(type_id, datetime);
@@ -235,11 +235,10 @@ public class Appointment {
      * @param patient1 Mail of patient
      * @param patient2 Mail of patient
      * @param patient3 Mail of patient
-     * @param type_id  Type of appointment
      * @param datetime Date in String
      * @return Integrity and error message
      */
-    private static Pair<Boolean, String> checkValuesAppointment(String patient1, String patient2, String patient3, Integer type_id, String datetime) {
+    private static Pair<Boolean, String> checkValuesAppointment(String patient1, String patient2, String patient3, String datetime) {
         Pair<Boolean, String> result = new Pair(false, "");
         Date appointmentTime;
 

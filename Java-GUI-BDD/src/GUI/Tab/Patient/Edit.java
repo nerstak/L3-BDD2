@@ -47,6 +47,11 @@ public class Edit extends GUI.Common.accountEdition implements ActionListener {
         _addressField.setText(u.get_address());
     }
 
+    /**
+     * Change field availability
+     *
+     * @param b Boolean
+     */
     private void fieldsAvailability(Boolean b) {
         _lastNameField.setEditable(b);
         _firstNameField.setEditable(b);
@@ -55,6 +60,7 @@ public class Edit extends GUI.Common.accountEdition implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == _updateButton) {
+            // Update values
             String result = ((oo.Patient) Main.user).updateFields(
                     _firstNameField.getText(),
                     _lastNameField.getText(),

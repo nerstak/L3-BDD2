@@ -34,7 +34,7 @@ public class ListAppointments extends GUI.Common.tableAppointment implements Doc
 
     @Override
     protected void SetElements() {
-        // Search field
+        // Search fields
         listComponents.add(new JLabel("Search by date"));
         _searchFieldDate = new JTextField(55);
         _searchFieldDate.getDocument().addDocumentListener(this);
@@ -72,14 +72,17 @@ public class ListAppointments extends GUI.Common.tableAppointment implements Doc
         _tableScrollPane.setBorder(BorderFactory.createEmptyBorder());
         listComponents.add(_tableScrollPane);
 
+        // Cancel
         _cancelButton = new JButton("Cancel");
         _cancelButton.addActionListener(this);
         listComponents.add(_cancelButton);
 
+        // Done button
         _doneButton = new JButton("Mark as done");
         _doneButton.addActionListener(this);
         listComponents.add(_doneButton);
 
+        // Payed button
         _payedButton = new JButton("Mark as payed");
         _payedButton.addActionListener(this);
         listComponents.add(_payedButton);
@@ -118,22 +121,26 @@ public class ListAppointments extends GUI.Common.tableAppointment implements Doc
      */
     private void search() {
         searchedAppointments = allAppointments;
+        // Getting values in search fields
         String dateQuery = _searchFieldDate.getText();
         String mailQuery = _searchFieldMail.getText();
         String statusQuery = _searchComboBoxStatus.getSelectedItem().toString();
 
+        // Date filtering
         if (!dateQuery.isEmpty()) {
             searchedAppointments = searchedAppointments.stream().filter(x -> {
                 return Utilities.appointmentFormat.format(x.getAppointmentTime()).contains(dateQuery);
             }).collect(Collectors.toCollection(ArrayList::new));
         }
 
+        // Mail filtering
         if (!mailQuery.isEmpty()) {
             searchedAppointments = searchedAppointments.stream().filter(x -> {
                 return x.getEmail().contains(mailQuery);
             }).collect(Collectors.toCollection(ArrayList::new));
         }
 
+        // Status filtering
         if (!statusQuery.isEmpty()) {
             searchedAppointments = searchedAppointments.stream().filter(x -> {
                 return x.getStatus().contains(statusQuery);
@@ -145,7 +152,6 @@ public class ListAppointments extends GUI.Common.tableAppointment implements Doc
 
     /**
      * Display fields according to the status of the appointment
-     *
      * @param a Appointment
      */
     private void displayFields(Appointment a) {
@@ -162,7 +168,6 @@ public class ListAppointments extends GUI.Common.tableAppointment implements Doc
 
     /**
      * Change fields availability
-     *
      * @param b Boolean of availability
      */
     private void setFieldsAvailability(boolean b) {
@@ -215,6 +220,7 @@ public class ListAppointments extends GUI.Common.tableAppointment implements Doc
     @Override
     public void valueChanged(ListSelectionEvent e) {
         if (!_table.getSelectionModel().isSelectionEmpty()) {
+            // Storing selected appointment and its row in memory
             rowAppointment = _table.getSelectionModel().getMinSelectionIndex();
             int idAppointment = Integer.parseInt(String.valueOf(_table.getValueAt(rowAppointment, 0)));
             selectedAppointment = searchedAppointments.stream().filter(c -> c.getIdAppointment() == idAppointment).findAny().orElse(null);
@@ -234,6 +240,8 @@ public class ListAppointments extends GUI.Common.tableAppointment implements Doc
         if (appointmentChanged && selectedAppointment != null) {
             selectedAppointment.updateAppointment();
             appointmentChanged = false;
+
+            // Refreshing table
             loadData();
             search();
             _table.setRowSelectionInterval(rowAppointment, rowAppointment);

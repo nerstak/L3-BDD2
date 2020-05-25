@@ -7,6 +7,9 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
 
+/**
+ * Utility functions for Swing
+ */
 public class JUtilities {
     /**
      * Resize column width according to content
@@ -21,8 +24,9 @@ public class JUtilities {
                 Component comp = table.prepareRenderer(renderer, row, column);
                 width = Math.max(comp.getPreferredSize().width +1 , width);
             }
+
             if(width > 300) {
-                width=300;
+                width = 300;
             }
             columnModel.getColumn(column).setPreferredWidth(width);
         }
@@ -33,8 +37,7 @@ public class JUtilities {
      * @param table JTable
      * @param alignment Type of alignment based on SwingConstants
      */
-    public static void setCellsAlignment(JTable table, int alignment)
-    {
+    public static void setCellsAlignment(JTable table, int alignment) {
         DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
         rightRenderer.setHorizontalAlignment(alignment);
         TableModel tableModel = table.getModel();

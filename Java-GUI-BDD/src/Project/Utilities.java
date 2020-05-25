@@ -11,7 +11,6 @@ public class Utilities {
 
     /**
      * Set an array of string from a number to another
-     *
      * @param b Integer Starting number
      * @param e Integer Ending number
      * @return Array of string
@@ -26,7 +25,6 @@ public class Utilities {
 
     /**
      * Verify if a string is an email address
-     *
      * @param email String to verify
      * @return boolean of validity
      */

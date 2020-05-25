@@ -96,6 +96,4 @@ public class Callable extends MariaDB implements Statement {
             return false;
         }
     }
-
-    // TODO : Implement more get
 }

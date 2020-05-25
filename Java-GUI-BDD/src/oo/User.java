@@ -32,8 +32,13 @@ public class User {
     }
 
 
-    public static Integer verifyUserMail(String mail)
-    {
+    /**
+     * Verify mail, and return the ID corresponding to it
+     *
+     * @param mail Mail to check
+     * @return ID, or -1 if no result
+     */
+    public static Integer verifyUserMail(String mail) {
         mail = mail.replaceAll("\\s+", "");
         int value = -1;
 
@@ -57,13 +62,11 @@ public class User {
 
     /**
      * Verify credentials
-     *
      * @param mail     Mail to check
      * @param password Password to check
      * @param type Type of account to check
      * @return Id of patient or 1 if therapist, -1 if false or not found
      */
-
     public static Integer verifyUserCredentials(String type, String mail, String password) {
         // TODO: Hash passwords
         int value = -1;

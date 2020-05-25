@@ -2,6 +2,7 @@ package GUI.Tab.Therapist;
 
 
 import Project.ItemComboBox;
+import Project.Main;
 import Project.Pair;
 import Project.Utilities;
 import oo.Appointment;
@@ -54,6 +55,8 @@ public class NewAppointment extends GUI.TabBase implements ActionListener {
             } else {
                 JOptionPane.showMessageDialog(this, "Appointment added", "Success", JOptionPane.INFORMATION_MESSAGE);
             }
+
+            Main.therapistWindow.LoadTabs();
         }
     }
 

@@ -13,7 +13,6 @@ public class ConsultationDialog extends JDialog implements ActionListener {
     private JButton confirmButton;
     private JComboBox anxietyComboBox;
 
-    private GridBagConstraints gbc;
     private final Appointment appointment;
 
     public ConsultationDialog(Appointment a) {
@@ -29,12 +28,14 @@ public class ConsultationDialog extends JDialog implements ActionListener {
     }
 
     private void setElements() {
-        gbc = new GridBagConstraints();
+        // Characteristics
+        GridBagConstraints gbc = new GridBagConstraints();
         getContentPane().setLayout(new GridBagLayout());
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         getContentPane().setBackground(Color.LIGHT_GRAY);
 
+        // Elements
         gbc.gridy = 0;
         gbc.gridx = 0;
         this.add(new JLabel("Gesture: "), gbc);
@@ -72,12 +73,20 @@ public class ConsultationDialog extends JDialog implements ActionListener {
         setBounds(0, 0, 500, 500);
     }
 
+    /**
+     * Set line Wrap for all textarea
+     *
+     * @param b boolean
+     */
     private void lineWrapTextArea(Boolean b) {
         gestureTextArea.setLineWrap(b);
         keywordsTextArea.setLineWrap(b);
         positionTextArea.setLineWrap(b);
     }
 
+    /**
+     * Set fields to their value
+     */
     private void fillFields() {
         gestureTextArea.setText(appointment.getGesture());
         keywordsTextArea.setText(appointment.getKeywords());
@@ -89,6 +98,7 @@ public class ConsultationDialog extends JDialog implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == confirmButton) {
+            // Update values
             appointment.setGesture(gestureTextArea.getText());
             appointment.setKeywords(keywordsTextArea.getText());
             appointment.setPosition(positionTextArea.getText());

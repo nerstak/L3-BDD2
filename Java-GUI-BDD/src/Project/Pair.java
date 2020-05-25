@@ -1,5 +1,11 @@
 package Project;
 
+/**
+ * Pair class
+ *
+ * @param <A> First element
+ * @param <B> Second element
+ */
 public class Pair<A, B> {
 
     public static <P, Q> Pair<P, Q> makePair(P p, Q q) {

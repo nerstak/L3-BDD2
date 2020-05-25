@@ -32,7 +32,6 @@ public interface Statement {
 
     /**
      * Execute a query (as prepared)
-     *
      * @return Result or null if error
      */
     ResultSet executeQuery();

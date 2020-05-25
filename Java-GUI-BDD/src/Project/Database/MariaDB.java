@@ -18,7 +18,6 @@ public class MariaDB {
 
     /**
      * Open connection to database
-     *
      * @return Boolean attesting the sequence of events
      */
     public static boolean openConnection(String user, String password) {
@@ -35,6 +34,9 @@ public class MariaDB {
         }
     }
 
+    /**
+     * Commit instructions
+     */
     public static void commit() {
         try {
             _connection.commit();
@@ -44,6 +46,9 @@ public class MariaDB {
         }
     }
 
+    /**
+     * Rollback SQL instructions
+     */
     public static void rollback() {
         try {
             System.out.println("Rollback...");
@@ -56,7 +61,6 @@ public class MariaDB {
 
     /**
      * End any query and rollback if error
-     *
      * @return Validity of the query
      */
     public static boolean endQuery() {

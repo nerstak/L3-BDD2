@@ -6,7 +6,6 @@ import Project.Database.Prepared;
 public class Consultation {
     /**
      * Create a consultation in the database
-     *
      * @param idPatient     id of patient
      * @param idAppointment if of appointment
      */

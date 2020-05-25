@@ -138,11 +138,24 @@ public class Patient extends User {
         return _relation;
     }
 
-    public String get_job(){
+    public String get_job() {
         return _job;
     }
 
-    public String updateFields(String firstName, String lastName, String email, String dobString, Boolean couple, String password, String job, String adress) {
+    /**
+     * Update fields in database
+     *
+     * @param firstName First Name
+     * @param lastName  Last Name
+     * @param email     Mail
+     * @param dobString Date of Birth in String
+     * @param couple    Relationship status
+     * @param password  Password
+     * @param job       Job
+     * @param address   Address
+     * @return
+     */
+    public String updateFields(String firstName, String lastName, String email, String dobString, Boolean couple, String password, String job, String address) {
         Prepared m;
         Date dob;
         if (firstName.isEmpty()) {
@@ -167,21 +180,22 @@ public class Patient extends User {
         } else {
             m = new Prepared("UPDATE patient SET nom = ?, prenom = ?, email = ?, dob = ?, couple = ?, adresse = ?, password = ? WHERE id_patient = ?");
         }
-        
+
+        // We set every value
         int index = 1;
         m.setValue(index++, lastName);
         m.setValue(index++, firstName);
         m.setValue(index++, email);
         m.setValue(index++, new java.sql.Date(dob.getTime()), Types.DATE);
         m.setValue(index++, couple, Types.BOOLEAN);
-        m.setValue(index++, adress);
+        m.setValue(index++, address);
         if (!password.isEmpty()) {
             m.setValue(index++, password);
         }
         m.setValue(index++, get_id());
         m.executeUpdate();
 
-        // Now updating name
+        // Now updating job
         Callable c = new Callable("Call new_job_patient(?,?)");
         c.setValue(1, job);
         c.setValue(2, get_id());

@@ -1,5 +1,8 @@
 package Project;
 
+/**
+ * Class to keep value linked to an element inside a JComboBox
+ */
 public class ItemComboBox {
     private int id;
     private String value;
