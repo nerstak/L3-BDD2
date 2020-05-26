@@ -19,9 +19,6 @@ public class NewAppointment extends GUI.TabBase implements ActionListener {
     private JTextField _patient1Text, _patient2Text, _patient3Text;
     private JComboBox _typeComboBox, _yearComboBox, _monthComboBox, _dayComboBox, _timeComboBox;
     private JButton _submitButton;
-    private DefaultComboBoxModel _modelCombobox;
-    private JPanel _datePanel;
-    private Vector<ItemComboBox> _typesAppointment;
 
     // Local variables
     private final LocalDateTime _actualDate = LocalDateTime.now();
@@ -98,7 +95,7 @@ public class NewAppointment extends GUI.TabBase implements ActionListener {
      * Set panel for the date
      */
     private void setDatePanel() {
-        _datePanel = new JPanel() {{
+        JPanel _datePanel = new JPanel() {{
             setBackground(Color.LIGHT_GRAY);
         }};
         listComponents.add(new JLabel("YYYY-MM-DD: "));
@@ -133,8 +130,8 @@ public class NewAppointment extends GUI.TabBase implements ActionListener {
 
     @Override
     public void Load() {
-        _typesAppointment = Appointment.getTypesAndPrices();
-        _modelCombobox = new DefaultComboBoxModel(_typesAppointment); // Get list of type of appointment
+        Vector<ItemComboBox> _typesAppointment = Appointment.getTypesAndPrices();
+        DefaultComboBoxModel _modelCombobox = new DefaultComboBoxModel(_typesAppointment); // Get list of type of appointment
         _typeComboBox.setModel(_modelCombobox);
     }
 }

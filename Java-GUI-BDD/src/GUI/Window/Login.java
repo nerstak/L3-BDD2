@@ -115,7 +115,6 @@ public class Login<T extends User> extends JFrame implements ActionListener {
 
     /**
      * Load the correct window that replaces the login window
-     *
      * @param u User created
      */
     private void loadWindow(User u) {

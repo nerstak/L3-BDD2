@@ -8,8 +8,9 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Job {
-    private Date startDate, endDate;
-    private String name;
+    private final Date startDate;
+    private final Date endDate;
+    private final String name;
 
     public Job(Date startDate, Date endDate, String name) {
         this.startDate = startDate;

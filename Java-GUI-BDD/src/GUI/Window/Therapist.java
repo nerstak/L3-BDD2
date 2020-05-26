@@ -11,6 +11,7 @@ import java.awt.event.KeyEvent;
 public class Therapist extends GUI.PanelBase {
     // Declare Final TabBase here
     private final TabBase _seePatientsPanel;
+    @SuppressWarnings("FieldCanBeLocal")
     private final TabBase _newPatientPanel;
     private final TabBase _newAppointmentPanel;
     private final TabBase _listAppointments;

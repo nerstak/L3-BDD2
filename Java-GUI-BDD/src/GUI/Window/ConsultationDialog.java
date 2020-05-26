@@ -7,12 +7,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 
 public class ConsultationDialog extends JDialog implements ActionListener {
     private JTextArea gestureTextArea, keywordsTextArea, positionTextArea;
     private JButton confirmButton;
     private JComboBox anxietyComboBox;
 
+    private boolean allowEdit = true;
     private final Appointment appointment;
 
     public ConsultationDialog(Appointment a) {
@@ -20,9 +22,9 @@ public class ConsultationDialog extends JDialog implements ActionListener {
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setTitle("Consultation Editor");
 
-
         setElements();
         fillFields();
+        setAvailability();
         setModal(true);
         setVisible(true);
     }
@@ -78,7 +80,6 @@ public class ConsultationDialog extends JDialog implements ActionListener {
 
     /**
      * Set line Wrap for all textarea
-     *
      * @param b boolean
      */
     private void lineWrapTextArea(Boolean b) {
@@ -98,16 +99,32 @@ public class ConsultationDialog extends JDialog implements ActionListener {
         anxietyComboBox.setSelectedIndex(appointment.getAnxiety());
     }
 
+    /**
+     * Set fields availability according to date or status
+     */
+    private void setAvailability() {
+        if(appointment.getStatus().equals("Cancelled") || new Date().before(appointment.getAppointmentTime())) {
+            allowEdit = false;
+            gestureTextArea.setEnabled(false);
+            keywordsTextArea.setEnabled(false);
+            positionTextArea.setEnabled(false);
+            anxietyComboBox.setEnabled(false);
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == confirmButton) {
-            // Update values
-            appointment.setGesture(gestureTextArea.getText());
-            appointment.setKeywords(keywordsTextArea.getText());
-            appointment.setPosition(positionTextArea.getText());
-            appointment.setAnxiety(Integer.parseInt((String) anxietyComboBox.getSelectedItem()));
+            if(allowEdit) {
+                // Update values
+                appointment.setGesture(gestureTextArea.getText());
+                appointment.setKeywords(keywordsTextArea.getText());
+                appointment.setPosition(positionTextArea.getText());
+                appointment.setAnxiety(Integer.parseInt((String) anxietyComboBox.getSelectedItem()));
 
-            appointment.updateConsultation();
+                appointment.updateConsultation();
+            }
+
             dispose();
         }
     }

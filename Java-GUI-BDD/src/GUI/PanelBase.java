@@ -11,7 +11,6 @@ import java.awt.event.ActionListener;
  * Abstract class that is the base of every window with tabs
  */
 public abstract class PanelBase extends JPanel implements ActionListener {
-    //    private TabBase panel1;
     private JFrame _frame;
     protected JTabbedPane tabbedPane;
     private JButton _logoutButton;

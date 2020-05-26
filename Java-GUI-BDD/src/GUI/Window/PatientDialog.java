@@ -14,13 +14,13 @@ public class PatientDialog extends JDialog {
     protected JTable _table;
     protected DefaultTableModel _modelTable;
 
-    protected ArrayList<Job> history;
+    protected final ArrayList<Job> history;
     protected ArrayList<String> columns;
 
     public PatientDialog(int patientID) {
         history = Job.recoverHistoryJob(patientID);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        setTitle("Consultation Editor");
+        setTitle("Job History");
 
         setElements();
         formatTable();

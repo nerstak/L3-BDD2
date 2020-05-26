@@ -249,6 +249,6 @@ public class ListAppointments extends GUI.Common.tableAppointment implements Doc
     }
 
     private void handleDialog() {
-        ConsultationDialog c = new ConsultationDialog(selectedAppointment);
+        new ConsultationDialog(selectedAppointment);
     }
 }
