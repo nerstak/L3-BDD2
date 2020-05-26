@@ -1,6 +1,7 @@
 package GUI.Tab.Therapist;
 
 import GUI.TabBase;
+import GUI.Window.PatientDialog;
 import Project.Main;
 import GUI.Window.Therapist;
 
@@ -9,8 +10,10 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-public class SeePatient<T extends Therapist> extends TabBase implements ListSelectionListener, DocumentListener
+public class SeePatient<T extends Therapist> extends TabBase implements ListSelectionListener
 {
     private JTextField _search;
     //private JButton _add;
@@ -29,31 +32,34 @@ public class SeePatient<T extends Therapist> extends TabBase implements ListSele
 
     public void SetElements()
     {
-        // Search Button
-        listComponents.add(new JLabel("Recherche par Prénom"));
-        _search = new JTextField();
-        _search.getDocument().addDocumentListener(this);
-        listComponents.add(_search);
-
         // Table of all patients
-        _patients = ModelTable.getPatients();
-
-        LoadTable();
+        RefreshTable();
         listComponents.add(_scrollPane);
     }
 
 
 
-    public void Load(){
-        oo.Therapist u = (oo.Therapist) Main.user;
-    }
+    public void Load(){}
 
     private void LoadTable()
     {
-        _table = new JTable(_patients, ModelTable.getColumnPatient());
-        _table.getSelectionModel().addListSelectionListener(this);
+        _table = new JTable(_patients, ModelTable.getColumnPatient()){
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         _table.getTableHeader().setReorderingAllowed(false);
         _table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+
+        _table.getSelectionModel().addListSelectionListener(this);
+
+        _table.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+            if (e.getClickCount() == 2) {
+                handleDialog();
+            }
+            }
+        });
 
         _scrollPane = new JScrollPane(_table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, _scrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     }
@@ -77,6 +83,12 @@ public class SeePatient<T extends Therapist> extends TabBase implements ListSele
 
         LoadTable();
 */
+    }
+
+    private void handleDialog() {
+        int rowPatient = _table.getSelectionModel().getMinSelectionIndex();
+        int idPatient = Integer.parseInt(String.valueOf(_table.getValueAt(rowPatient, 0)));
+        PatientDialog d = new PatientDialog(idPatient);
     }
 
     @Override
@@ -109,25 +121,5 @@ public class SeePatient<T extends Therapist> extends TabBase implements ListSele
                 System.err.format("\nSQL State: %s\n%s", f.getSQLState(), f.getMessage());
             }
         } **/
-    }
-
-    @Override
-    public void insertUpdate(DocumentEvent e) {
-        search();
-    }
-
-    @Override
-    public void removeUpdate(DocumentEvent e) {
-        search();
-    }
-
-    @Override
-    public void changedUpdate(DocumentEvent e) {
-        search();
-    }
-
-    private void loadWindow() {
-        Main.therapistWindow.dispose();
-        Main.therapistWindow.Load();
     }
 }

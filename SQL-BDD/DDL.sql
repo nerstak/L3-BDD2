@@ -87,8 +87,8 @@ CREATE OR REPLACE DEFINER = CURRENT_USER
 VIEW v_historique_job_complet
     AS SELECT id_historique_job, nom, id_patient, date_debut, date_fin
     FROM job
-INNER JOIN historique_job 
-ON historique_job.id_job = job.id_job;
+        INNER JOIN historique_job
+        ON historique_job.id_job = job.id_job;
 
 CREATE OR REPLACE DEFINER = CURRENT_USER
 VIEW v_extended_appointment

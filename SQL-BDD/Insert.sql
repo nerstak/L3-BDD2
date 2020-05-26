@@ -52,9 +52,11 @@ UPDATE rdv SET status = 'Cancelled' WHERE id_rdv = 22;
 
 INSERT INTO historique_job(id_patient, id_job, date_debut, date_fin) VALUES
 (1, 11, '2019-06-01', '2019-08-31'),
-(2, 10, '2000-09-05', DATE(NOW())),
-(3, 11, '2019-06-01', '2019-08-31'),
-(4, 3, '1999-03-18', DATE(NOW()));
+(1, 5, '2019-08-31', NULL),
+(2, 10, '2000-09-05', NULL),
+(3, 6, '2019-06-01', '2019-08-31'),
+(3, 4, '2019-08-31', NULL),
+(4, 3, '1999-03-18', NULL);
 
 INSERT INTO consultation(id_rdv, id_patient, posture, gestuel, mots_cles, anxiete) VALUES
 (1, 1, 'Ne se tient pas droit', NULL, 'pas droit', 5),

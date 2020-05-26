@@ -7,9 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ModelTable extends AbstractTableModel {
-
-
-    private static final String[] _columnPatient = {"Prénom", "Nom", "Email", "DOB", "Categorie", "Moyen"};
+    private static final String[] _columnPatient = {"","Prénom", "Nom", "Email", "DOB", "Categorie", "Moyen"};
 
 
     public static String[] getColumnPatient(){
@@ -34,10 +32,7 @@ public class ModelTable extends AbstractTableModel {
     }
 
     public static String[][] getPatients(){
-
         // Init the table to do not too much line
-
-
         // fill the table
 
         String[][] patients = new String[getSize()][_columnPatient.length];
@@ -45,17 +40,18 @@ public class ModelTable extends AbstractTableModel {
         {
             int i = 0;
 
-            Prepared p = new Prepared("SELECT nom, prenom, email, categorie, moyen, dob from patient");
+            Prepared p = new Prepared("SELECT id_patient, nom, prenom, email, categorie, moyen, dob from patient");
             ResultSet rs = p.executeQuery();
 
             while(rs.next())
             {
-                patients[i][0] = rs.getString(2);
-                patients[i][1] = rs.getString(1);
-                patients[i][2] = rs.getString(3);
-                patients[i][3] = rs.getString(6);
-                patients[i][4] = rs.getString(4);
+                patients[i][0] = String.valueOf(rs.getInt(1));
+                patients[i][1] = rs.getString(3);
+                patients[i][2] = rs.getString(2);
+                patients[i][3] = rs.getString(4);
+                patients[i][4] = rs.getString(7);
                 patients[i][5] = rs.getString(5);
+                patients[i][6] = rs.getString(6);
                 i++;
             }
         }
@@ -65,39 +61,6 @@ public class ModelTable extends AbstractTableModel {
 
         return patients;
     }
-
-
-    public static String[][] getPatientsByName(String name){
-
-        // fill the table
-        String[][] patients = new String[getSize()][3];
-        try
-        {
-            int i = 0;
-
-            Prepared p = new Prepared("SELECT nom, prenom, email, categorie, moyen, dob from patient WHERE prenom = ?");
-            p.setValue(1, name);
-            ResultSet rs = p.executeQuery();
-
-            while(rs.next())
-            {
-                patients[i][0] = rs.getString(2);
-                patients[i][1] = rs.getString(1);
-                patients[i][2] = rs.getString(3);
-                patients[i][3] = rs.getString(6);
-                patients[i][4] = rs.getString(4);
-                patients[i][5] = rs.getString(5);
-                i++;
-            }
-        }
-        catch (SQLException e) {
-            System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
-        }
-
-        return patients;
-    }
-
-
 
 
     @Override

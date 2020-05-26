@@ -27,6 +27,9 @@ public class ConsultationDialog extends JDialog implements ActionListener {
         setVisible(true);
     }
 
+    /**
+     * Place elements in interface
+     */
     private void setElements() {
         // Characteristics
         GridBagConstraints gbc = new GridBagConstraints();
@@ -108,4 +111,6 @@ public class ConsultationDialog extends JDialog implements ActionListener {
             dispose();
         }
     }
+
+
 }

@@ -34,7 +34,6 @@ public class tableAppointment extends GUI.TabBase {
 
     /**
      * Put loaded data in table
-     *
      * @param values Loaded and formatted data
      */
     protected void putValuesInTable(ArrayList<String[]> values) {
@@ -70,5 +69,4 @@ public class tableAppointment extends GUI.TabBase {
             columns.add(0, "ID");
         }
     }
-
 }
