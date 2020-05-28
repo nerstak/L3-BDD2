@@ -10,6 +10,9 @@ import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+/**
+ * Patient dialog showing history
+ */
 public class PatientDialog extends JDialog {
     protected JTable _table;
     protected DefaultTableModel _modelTable;

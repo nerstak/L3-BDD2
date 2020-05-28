@@ -8,7 +8,9 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-// TODO: Empty form after successful submission
+/**
+ * Tab to create a patient
+ */
 public class NewPatient extends GUI.Common.accountEdition implements ActionListener {
     // GUI
     private JButton _createButton;

@@ -10,9 +10,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * Class that holds window information
+ * Class that holds login window
  */
-public class Login<T extends User> extends JFrame implements ActionListener {
+public class Login extends JFrame implements ActionListener {
     // GUI
     private JLabel loginLabel, passwordLabel;
     private JButton loginButton, quitButton;

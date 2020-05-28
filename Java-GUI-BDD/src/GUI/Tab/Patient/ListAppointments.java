@@ -10,6 +10,9 @@ import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
+/**
+ * Tab containing the list of appointment for patient
+ */
 public class ListAppointments extends GUI.Common.tableAppointment implements DocumentListener {
     private JTextField _searchField;
 

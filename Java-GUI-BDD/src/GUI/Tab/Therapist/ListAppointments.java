@@ -17,6 +17,9 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
+/**
+ * Tab containing list of appointment for therapist
+ */
 public class ListAppointments extends GUI.Common.tableAppointment implements DocumentListener, ActionListener, ListSelectionListener {
     private JTextField _searchFieldDate, _searchFieldMail;
     private JComboBox _searchComboBoxStatus;

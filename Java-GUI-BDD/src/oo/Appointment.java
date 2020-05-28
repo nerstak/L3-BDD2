@@ -15,6 +15,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Vector;
 
+/**
+ * Appointment class
+ * It is used for almost anything linked to appointment
+ */
 public class Appointment {
     private final int idAppointment;
     private String payment;
@@ -120,6 +124,11 @@ public class Appointment {
         this.anxiety = anxiety;
     }
 
+    /**
+     * Recover appointments from the user
+     * @param idUser id of actual user
+     * @return List of appointment (of patient or therapist)
+     */
     public static ArrayList<Appointment> recoverAppointments(int idUser) {
         ArrayList<Appointment> list = new ArrayList<>();
 
@@ -167,7 +176,6 @@ public class Appointment {
 
     /**
      * Get a vector of formatted types of Appointment with their prices
-     *
      * @return Vector ordered by id
      */
     public static Vector<ItemComboBox> getTypesAndPrices() {
@@ -189,13 +197,12 @@ public class Appointment {
 
     /**
      * Create an appointment in the database
-     *
-     * @param patient1
-     * @param patient2
-     * @param patient3
-     * @param type_id
-     * @param datetime
-     * @return
+     * @param patient1 First patient
+     * @param patient2 Second patient
+     * @param patient3 Third patient
+     * @param type_id Type of te appointment
+     * @param datetime Time
+     * @return Pair containing boolean of integrity and error string
      */
     public static Pair<Boolean, String> createAppointment(String patient1, String patient2, String patient3, Integer type_id, String datetime) {
         // Verify values
@@ -231,7 +238,6 @@ public class Appointment {
 
     /**
      * Verify that values given are coherent
-     *
      * @param patient1 Mail of patient
      * @param patient2 Mail of patient
      * @param patient3 Mail of patient
@@ -284,7 +290,6 @@ public class Appointment {
 
     /**
      * Insert Appointment
-     *
      * @param type_id  Type of appointment
      * @param datetime Timestamp of appointment
      * @return Appointment ID

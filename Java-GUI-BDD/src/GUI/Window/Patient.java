@@ -6,6 +6,9 @@ import GUI.TabBase;
 
 import java.awt.event.KeyEvent;
 
+/**
+ * Window for the patient
+ */
 public class Patient extends GUI.PanelBase {
     // Declare Final TabBase here
     private final TabBase _editPanel;

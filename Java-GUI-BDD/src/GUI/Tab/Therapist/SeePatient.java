@@ -7,6 +7,9 @@ import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+/**
+ * Tab of list of all patients
+ */
 public class SeePatient extends TabBase {
     private String[][] _patients;
     private JTable _table;

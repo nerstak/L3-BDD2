@@ -9,6 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
 
+/**
+ * Consultation dialog showing consultation's information
+ */
 public class ConsultationDialog extends JDialog implements ActionListener {
     private JTextArea gestureTextArea, keywordsTextArea, positionTextArea;
     private JButton confirmButton;
@@ -128,6 +131,4 @@ public class ConsultationDialog extends JDialog implements ActionListener {
             dispose();
         }
     }
-
-
 }

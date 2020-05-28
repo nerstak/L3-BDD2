@@ -8,7 +8,6 @@ import java.sql.ResultSet;
 public interface Statement {
     /**
      * Set value of a parameter
-     *
      * @param index Index of parameter (from 1)
      * @param obj   Object to set value
      * @param <T>   Type of object (Java)
@@ -17,7 +16,6 @@ public interface Statement {
 
     /**
      * Set value of a parameter
-     *
      * @param index Index of parameter (from 1)
      * @param obj   Object to set value
      * @param type  Type of object in SQL.Types

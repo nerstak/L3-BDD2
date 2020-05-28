@@ -14,6 +14,9 @@ import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
 import java.util.Vector;
 
+/**
+ * Tab to create new appointment
+ */
 public class NewAppointment extends GUI.TabBase implements ActionListener {
     // GUI
     private JTextField _patient1Text, _patient2Text, _patient3Text;

@@ -18,18 +18,15 @@ public abstract class PanelBase extends JPanel implements ActionListener {
     public PanelBase() {
         super(new GridLayout(1, 1));
         tabbedPane = new JTabbedPane();
-        //tabbedPane.setPreferredSize(new Dimension(500,500));
         add(tabbedPane);
     }
 
     /**
      * Virtual function to simplify inheritance
      */
-    public void Load() {
-    }
+    public void Load() {}
 
-    public void LoadTabs() {
-    }
+    public void LoadTabs() {}
 
     /**
      * Display the window
@@ -70,7 +67,6 @@ public abstract class PanelBase extends JPanel implements ActionListener {
 
     /**
      * Create a panel with only text inside
-     *
      * @param text String to insert
      * @return JPanel created
      */
@@ -85,6 +81,9 @@ public abstract class PanelBase extends JPanel implements ActionListener {
     }
 
 
+    /**
+     * Close window
+     */
     public void dispose() {
         if (_frame != null) {
             _frame.dispose();

@@ -8,6 +8,9 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
 
+/**
+ * Table of appointment
+ */
 public class tableAppointment extends GUI.TabBase {
     // GUI
     protected JTable _table;

@@ -4,6 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * JPanel inside a tab
+ */
 public abstract class TabBase extends JPanel {
     private final GridBagConstraints gbc;
     protected ArrayList<JComponent> listComponents;
@@ -32,7 +35,6 @@ public abstract class TabBase extends JPanel {
 
     /**
      * Add every elements of listComponents to the JPanel on a grid
-     *
      * @param modulo int Number of columns
      */
     protected void DisplayElements(Integer modulo) {

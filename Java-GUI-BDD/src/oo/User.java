@@ -34,7 +34,6 @@ public class User {
 
     /**
      * Verify mail, and return the ID corresponding to it
-     *
      * @param mail Mail to check
      * @return ID, or -1 if no result
      */
@@ -68,7 +67,6 @@ public class User {
      * @return Id of patient or 1 if therapist, -1 if false or not found
      */
     public static Integer verifyUserCredentials(String type, String mail, String password) {
-        // TODO: Hash passwords
         int value = -1;
         if(type.equals("Patient")) {
             // Verify patient credential

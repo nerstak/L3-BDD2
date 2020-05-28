@@ -8,6 +8,9 @@ import GUI.TabBase;
 
 import java.awt.event.KeyEvent;
 
+/**
+ * Window for the therapist
+ */
 public class Therapist extends GUI.PanelBase {
     // Declare Final TabBase here
     private final TabBase _seePatientsPanel;
