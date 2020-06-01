@@ -29,7 +29,7 @@ Download the [MariaDB Connector/J 2.6.0](https://downloads.mariadb.com/Connector
 First thing to do is to clone the repository: 
 
 ```
-git clone git@github.com:nerstak/L3-Database2.git
+git clone git@github.com:nerstak/L3-BDD2.git
 ```
 
 #### Setting up the database
@@ -47,3 +47,10 @@ Finally, place the JDBC in a known folder (`lib` is a good one), and add it to y
 ## Usage <a name = "usage"></a>
 
 Run the application, using the main function located in `Java-GUI-BDD/src/Project/Main.java` as a target.
+
+To log in, you can use credentials set in the `Insert.sql` file, or the following values.
+
+|           | Username                | Password |
+| --------- | ----------------------- | -------- |
+| Therapist | admin                   | admin    |
+| Patient   | pascal.dupont@gmail.com | 1234     |
