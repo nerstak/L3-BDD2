@@ -8,7 +8,7 @@
 
 ## About <a name = "about"></a>
 
-This project was developped as an end project for an advanced database course.
+This project was developped as an end project for an advanced database course. It contains a small GUI based on Swing with a small wrapper, and a light JDBC wrapper. Both of those components have limits, but are sufficient for the project's requirements.
 
 ## Getting Started <a name = "getting_started"></a>
 
